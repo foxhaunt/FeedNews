@@ -1,173 +1,271 @@
-# Feed News
+# 📰 feed-news
 
-Agregador inteligente de noticias con actualización automática, clasificación por relevancia y soporte de traducción al español.
+Agregador personal de noticias con relevancia configurable y perfil histórico propio.
 
-## Características
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![FastAPI](https://img.shields.io/badge/API-FastAPI-009688)
+![Tests](https://img.shields.io/badge/tests-202%20passing-brightgreen)
+![Fuentes](https://img.shields.io/badge/fuentes-25%20activas-blueviolet)
 
-- **Ingestión RSS/Atom** de 20 fuentes (España, Europa, Internacional) con actualización cada 15 minutos
-- **Clasificación automática** por ámbito geográfico y 10 categorías temáticas
-- **Puntuación de relevancia** ponderada por impacto, urgencia, actualidad y fiabilidad de fuente
-- **Detección de duplicados** por similitud de título (Jaccard sobre palabras normalizadas)
-- **Agrupación de noticias** sobre el mismo acontecimiento
-- **Detección automática de idioma** (langdetect)
-- **Traducción al español** vía LibreTranslate (gratuito), con soporte para OpenAI y Anthropic
-- **Interfaz web** responsive con modo oscuro, búsqueda, filtros y guardado de favoritos
-- **Panel de administración** con estadísticas del sistema y gestión de fuentes
-- **Planificador de tareas** (APScheduler): ingestión cada 15m, procesamiento cada 5m
+---
 
-## Arquitectura
+## Contenido
+
+1. [Fuentes de noticias](#1-fuentes-de-noticias)
+2. [Distribución editorial](#2-distribución-editorial)
+3. [Categorías temáticas](#3-categorías-temáticas)
+4. [Sistema de relevancia](#4-sistema-de-relevancia)
+5. [Perfil de Historia](#5-perfil-de-historia)
+6. [Configuración](#6-configuración)
+7. [Instalación](#7-instalación)
+8. [API](#8-api)
+
+---
+
+## 1. Fuentes de noticias
+
+25 fuentes activas agrupadas por ámbito geográfico. La columna `fiabilidad` pondera las puntuaciones de relevancia mediante un ajuste suave de ±20% — no suprime ninguna fuente.
+
+### España
+
+| Fuente | Línea editorial | Fiabilidad | Estado |
+|---|---|---|---|
+| El País | centroizquierda | 0.85 | ✅ activa |
+| 20 Minutos | centroizquierda | 0.70 | ✅ activa |
+| La Vanguardia | centro | 0.85 | ✅ activa |
+| El Confidencial | centro | 0.80 | ✅ activa |
+| El Mundo | centroderecha | 0.80 | ✅ activa |
+| El Español | centroderecha | 0.75 | ✅ activa |
+| ABC España | centroderecha | 0.80 | ✅ activa |
+| The Objective | centroderecha | 0.75 | ✅ activa |
+| OKDIARIO | derecha | 0.55 | ✅ activa |
+| La Bandera | derecha | 0.60 | ✅ activa |
+| La Gaceta | derecha | 0.55 | ✅ activa |
+| El Diario | izquierda | 0.80 | ❌ desactivada |
+
+### Europa
+
+| Fuente | Idioma | Línea editorial | Fiabilidad |
+|---|---|---|---|
+| BBC Europe | EN | centro | 0.92 |
+| POLITICO Europe | EN | centroderecha | 0.85 |
+| Euronews (ES) | ES | centro | 0.80 |
+| Euronews (EN) | EN | centro | 0.80 |
+| Deutsche Welle (EN) | EN | centro | 0.88 |
+| Le Monde Diplomatique (ES) | ES | izquierda | 0.85 |
+
+### Internacional
+
+| Fuente | Idioma | Línea editorial | Fiabilidad |
+|---|---|---|---|
+| BBC World | EN | centro | 0.92 |
+| The Guardian World | EN | centroizquierda | 0.88 |
+| France 24 (EN) | EN | centro | 0.85 |
+| Deutsche Welle World | EN | centro | 0.88 |
+| NPR News | EN | centroizquierda | 0.85 |
+| Al Jazeera | EN | no determinado | 0.75 |
+| RT (ES) | ES | proruso | 0.45 |
+
+### Historia (fuentes académicas)
+
+| Fuente | Institución | Tipo | Fetch |
+|---|---|---|---|
+| El Reto Histórico | — | divulgación | 60 min |
+| Muy Interesante Historia | — | divulgación | 1440 min |
+| Hispania Sacra | CSIC | académica | 1440 min |
+| Hispania | CSIC | académica | 1440 min |
+| En la España Medieval | UCM | académica | 1440 min |
+
+---
+
+## 2. Distribución editorial
+
+| Posición | Peso en feed España |
+|---|---|
+| Centroderecha | 31 % |
+| Centro | 22 % |
+| Centroizquierda | 19 % |
+| Derecha | 17 % |
+| Izquierda | 11 % |
+
+**HHI ≈ 0.21** — concentración moderada (baja < 0.15 · moderada 0.15–0.25 · alta > 0.25).
+
+---
+
+## 3. Categorías temáticas
+
+Cada artículo recibe hasta 3 categorías mediante coincidencia de palabras clave con límites de palabra. Las fuentes con categoría primaria forzada (como Historia) exigen el **doble del umbral** en categorías secundarias para evitar falsos positivos.
+
+`⚔️ Defensa` `🌍 Geopolítica` `🏛️ Política` `📈 Economía` `🔬 Ciencia` `💻 Tecnología` `🔋 Energía` `🏥 Salud` `🌿 Medioambiente` `🛡️ Seguridad` `⚖️ Sociedad` `🚨 Sucesos` `📜 Historia`
+
+### Multiplicadores de categoría
+
+| Categoría | Multiplicador |
+|---|---|
+| Defensa | ×1.25 |
+| Geopolítica | ×1.20 |
+| Política | ×1.10 |
+| Economía | ×1.10 |
+| Seguridad / Sucesos | ×1.08 |
+| Ciencia / Tecnología | ×1.00 |
+| Sociedad | ×0.95 |
+
+---
+
+## 4. Sistema de relevancia
+
+Todos los artículos reciben `relevance_score ∈ [0, 1]`. **Historia usa su propio algoritmo** (ver §5). El resto comparte esta fórmula:
 
 ```
-feed_news/
-├── app/
-│   ├── main.py              # FastAPI app, startup, lifespan
-│   ├── config.py            # Settings from .env
-│   ├── database.py          # SQLAlchemy async engine
-│   ├── models.py            # Source, News, Event, Category, TranslationCache, SystemLog
-│   ├── schemas.py           # Pydantic schemas
-│   ├── seeds.py             # Categorías y fuentes iniciales
-│   ├── api/                 # Rutas FastAPI
-│   │   ├── news.py          # /api/news
-│   │   ├── sources.py       # /api/sources
-│   │   └── admin.py         # /api/admin
-│   ├── ingestion/           # Captación de noticias
-│   │   ├── rss_fetcher.py   # Fetcher RSS/Atom
-│   │   ├── normalizer.py    # Normalización, geo-hints
-│   │   └── manager.py       # Ciclo de ingestión
-│   ├── processing/          # Procesamiento
-│   │   ├── categorizer.py   # Asignación de categorías por keywords
-│   │   ├── scoring.py       # Algoritmo de relevancia ponderada
-│   │   ├── deduplication.py # Detección de duplicados
-│   │   └── grouping.py      # Agrupación de acontecimientos
-│   ├── translation/         # Traducción
-│   │   ├── detector.py      # Detección de idioma
-│   │   ├── translator.py    # Caché + coordinación
-│   │   └── providers/       # LibreTranslate, OpenAI, Anthropic
-│   ├── scheduler/
-│   │   └── tasks.py         # APScheduler jobs
-│   └── static/
-│       └── index.html       # SPA frontend
-└── tests/                   # Suite de pruebas
+puntuación = 0.5 (base)
+  + recencia    → <1 h: +0.20 · <6 h: +0.15 · <24 h: +0.10 · <72 h: +0.05
+  + tier-1 kws  → guerra, atentado, bomba, terremoto … +0.08/hit (máx +0.20)
+  + tier-2 kws  → elecciones, crisis, sanciones, OTAN … +0.03/hit (máx +0.09)
+  × categoría   → ×0.95 – ×1.25
+  × geo         → ×1.05 España · ×1.02 Europa · ×1.00 Internacional
+  × fiabilidad  → ajuste suave ±20% en torno a 0.7
+
+Destacada  ≥ 0.72
+Relevante  ≥ 0.48
+Seguimiento < 0.48
 ```
 
-## Instalación
+---
 
-### Requisitos
+## 5. Perfil de Historia
 
-- Python 3.10+
-- ~200 MB de espacio en disco
+Los artículos históricos usan un algoritmo separado basado en preferencias personales. La **recencia tiene peso mínimo** — un artículo académico excelente publicado hace meses puede puntuar más alto que una noticia superficial de hoy.
 
-### Pasos
+### Fórmula
+
+```
+puntuación = 0.40 × afinidad_temática
+           + 0.25 × profundidad_contenido
+           + 0.20 × interés_historiográfico
+           + 0.15 × calidad_documental
+           + recencia (máx +0.05)
+
+Destacada  ≥ 0.70
+Relevante  ≥ 0.45
+Seguimiento < 0.45
+```
+
+### Temas de máxima prioridad *(afinidad alta)*
+
+Historia de España e Hispanidad — artículos dedicados a estos temas puntúan hasta 0.85 en afinidad temática.
+
+`hispania` `hispanidad` `visigodo` `al-ándalus` `califato` `taifa` `reconquista` `castilla` `corona de aragón` `fueros` `siglo de oro` `reyes católicos` `monarquía hispánica` `guerra carlista` `celtíberos` `íberos` `hispania romana` `mozárabe` `mudéjar` `sefardí` `reino de granada` `carlos v` `felipe ii` `descubrimiento de américa`
+
+### Temas de gran interés *(afinidad media)*
+
+`segunda guerra mundial` `nazismo` `holocausto` `historia militar` `batalla` `cruzada` `legión romana` `república romana` `julio césar` `imperio romano` `historia de la iglesia` `papado` `inquisición` `templarios` `hagiografía` `mártir` `faraón` `antiguo egipto` `imperio otomano` `vikingo` `personaje histórico`
+
+### Temas excluidos *(afinidad mínima = 0.05)*
+
+`prehistoria` `paleolítico` `neolítico` `calcolítico` `megalítico` `neandertal` `homo sapiens` `cromañón` `australopithecus` `dólmen`
+
+### Indicadores de calidad
+
+| Dimensión | Señales positivas | Señales negativas |
+|---|---|---|
+| **Profundidad** | Resumen >400 chars · `se analiza` · `fuentes primarias` · `contexto histórico` · `excavación arqueológica` | `top 10` · `curiosidades` · `sabías que` · `alucinante` |
+| **Historiográfico** | `nuevo hallazgo` · `fuente inédita` · `debate historiográfico` · fuente UCM / CSIC | — |
+| **Documental** | Alta fiabilidad · `csic` · `ucm` · `universidad` · `real academia` | Baja fiabilidad de fuente |
+
+### Distribución actual (99 artículos)
+
+| Nivel | Artículos |
+|---|---|
+| Destacada | 4 |
+| Relevante | 68 |
+| Seguimiento | 27 |
+
+> **Destacados actuales:** mudéjares del Reino de Castilla (0.765) · lazos diplomáticos en la Corona de Castilla (0.765) · diplomacia de la Corona de Aragón / Guerra de los Dos Pedros (0.737) · provisiones episcopales de Orihuela (0.707)
+
+Para ajustar las preferencias edita `app/processing/historia_profile.py` (solo datos, sin lógica) y recalcula:
 
 ```bash
-# 1. Clonar / acceder al directorio
-cd feed_news
-
-# 2. Crear entorno virtual
-python3 -m venv venv  # puede requerir: apt install python3.12-venv
-# Si no hay ensurepip:
-python3 -m venv --without-pip venv
-curl -sS https://bootstrap.pypa.io/get-pip.py | venv/bin/python3
-
-# 3. Activar e instalar dependencias
-source venv/bin/activate
-pip install -r requirements.txt
-pip install "sqlalchemy[asyncio]" greenlet  # greenlet necesario para SQLAlchemy async
-
-# 4. Configurar variables de entorno
-cp .env.example .env
-# Editar .env con tus valores (especialmente ADMIN_TOKEN)
-
-# 5. Arrancar
-python -m uvicorn app.main:app --host 0.0.0.0 --port 8765
+python -m app.maintenance rescore_historia
 ```
 
-La base de datos se inicializa y las fuentes se cargan automáticamente en el primer arranque.
-La primera ingestión de noticias comienza de inmediato.
+---
 
-Acceder en: http://localhost:8765
+## 6. Configuración
 
-## Variables de entorno
+### Variables de entorno (`.env`)
 
 | Variable | Descripción | Por defecto |
 |---|---|---|
-| `DATABASE_URL` | URL de SQLAlchemy async | `sqlite+aiosqlite:///./feed_news.db` |
-| `TRANSLATION_PROVIDER` | `libre`, `openai`, `anthropic`, `none` | `libre` |
-| `LIBRETRANSLATE_URL` | Instancia LibreTranslate | `https://libretranslate.com` |
-| `LIBRETRANSLATE_API_KEY` | API key de LibreTranslate (opcional) | `` |
-| `OPENAI_API_KEY` | API key de OpenAI (opcional) | `` |
-| `ANTHROPIC_API_KEY` | API key de Anthropic (opcional) | `` |
+| `DATABASE_URL` | URL SQLAlchemy async | `sqlite+aiosqlite:///./feed_news.db` |
+| `TRANSLATION_PROVIDER` | `libretranslate` · `openai` · `anthropic` · `none` | `none` |
+| `LIBRETRANSLATE_URL` | Instancia LibreTranslate | `http://localhost:5000` |
+| `OPENAI_API_KEY` | API key OpenAI | — |
+| `ANTHROPIC_API_KEY` | API key Anthropic | — |
 | `ADMIN_TOKEN` | Token de administración | `admin-token-change-me` |
-| `INGESTION_INTERVAL_MINUTES` | Intervalo de ingestión | `15` |
-| `PROCESSING_INTERVAL_MINUTES` | Intervalo de procesamiento | `5` |
+| `MAX_CONCURRENT_FETCHES` | Fetches simultáneos | `5` |
 
-## API
+### Gestionar fuentes
+
+Edita `app/seeds.py` y añade `"enabled": False` para desactivar una fuente. El próximo arranque aplica el cambio automáticamente.
+
+### Mantenimiento
+
+```bash
+python -m app.maintenance reclassify_historia   # recategorizar artículos históricos
+python -m app.maintenance rescore_historia       # recalcular puntuaciones de historia
+```
+
+---
+
+## 7. Instalación
+
+```bash
+# 1. Entorno virtual
+python3 -m venv venv
+source venv/bin/activate
+
+# 2. Dependencias
+pip install -r requirements.txt
+
+# 3. Configuración
+cp .env.example .env   # edita ADMIN_TOKEN al menos
+
+# 4. Arrancar
+uvicorn app.main:app --host 0.0.0.0 --port 8765
+```
+
+La base de datos se inicializa y las fuentes se cargan en el primer arranque. Accede en `http://localhost:8765`.
+
+### Tests
+
+```bash
+pytest tests/ -q                              # suite completa (202 tests)
+pytest tests/test_historia_scoring.py -v      # perfil de historia (15 tests)
+```
+
+---
+
+## 8. API
 
 | Endpoint | Descripción |
 |---|---|
-| `GET /api/news` | Lista de noticias con filtros (`geo`, `category`, `relevance`, `q`, `sort_by`, `page`) |
-| `GET /api/news/featured` | Noticias destacadas |
+| `GET /api/news` | Lista con filtros: `geo`, `category`, `relevance`, `q`, `sort_by`, `page` |
+| `GET /api/news/featured` | Noticias destacadas (acepta `geo`, `category`) |
 | `GET /api/news/{id}` | Detalle de una noticia |
-| `GET /api/categories` | Lista de categorías |
+| `GET /api/categories` | Categorías disponibles |
 | `GET /api/sources` | Lista de fuentes |
-| `POST /api/sources` | Crear fuente (requiere `X-Admin-Token`) |
-| `PATCH /api/sources/{id}/toggle` | Habilitar/deshabilitar fuente (admin) |
-| `GET /api/admin/stats` | Estadísticas del sistema (admin) |
-| `GET /api/admin/logs` | Logs del sistema (admin) |
-| `POST /api/admin/run-ingestion` | Lanzar ingestión manual (admin) |
-| `POST /api/admin/run-processing` | Lanzar procesamiento manual (admin) |
+| `POST /api/sources` | Crear fuente *(requiere `X-Admin-Token`)* |
+| `PATCH /api/sources/{id}/toggle` | Habilitar/deshabilitar fuente *(admin)* |
+| `GET /api/admin/stats` | Estadísticas del sistema *(admin)* |
+| `POST /api/admin/run-ingestion` | Ingestión manual *(admin)* |
 | `GET /api/health` | Estado de la aplicación |
-| `GET /api/docs` | Documentación interactiva (Swagger) |
+| `GET /api/docs` | Swagger UI |
 
-## Pruebas
-
-```bash
-source venv/bin/activate
-python -m pytest tests/ -v
-```
-
-42 pruebas automatizadas que cubren: ingestión, normalización, detección de idioma, puntuación, deduplicación, traducción y endpoints de API.
-
-## Fuentes configuradas
-
-### España (7 fuentes)
-El País, El Mundo, La Vanguardia, El Confidencial, El Diario, 20 Minutos, El Español
-
-### Europa (5 fuentes)
-Euronews (EN), POLITICO Europe, BBC Europe, Deutsche Welle (EN), Le Monde Diplomatique (ES)
-
-### Internacional (8 fuentes)
-Reuters World, BBC World, Al Jazeera, The Guardian World, France 24, Deutsche Welle World, RT (ES), Agencia EFE
-
-## Traducción
-
-La traducción está desactivada por defecto para artículos en inglés (se muestran con título original mientras `translation_status = "pending"`).
-
-Para activar la traducción automática:
-
-1. **LibreTranslate (gratuito)**: `TRANSLATION_PROVIDER=libre`. Usa instancias públicas como fallback, sin clave API.
-2. **OpenAI**: `TRANSLATION_PROVIDER=openai` + `OPENAI_API_KEY=sk-...`
-3. **Anthropic**: `TRANSLATION_PROVIDER=anthropic` + `ANTHROPIC_API_KEY=sk-ant-...`
+---
 
 ## Limitaciones conocidas
 
-- **Sin autenticación de usuario**: los favoritos se guardan en localStorage del navegador.
-- **SQLite**: adecuado para uso personal. Para múltiples usuarios concurrentes, configurar PostgreSQL.
-- **Traducción bajo demanda**: los artículos en inglés se muestran en inglés hasta que la traducción se procesa.
-- **Imágenes**: algunas fuentes no incluyen imágenes en sus feeds RSS.
-- **RT (ES)**: incluida con puntuación de fiabilidad reducida (0.5) como fuente de contraste editorial.
-
-## Despliegue en producción
-
-```bash
-# Con gunicorn + uvicorn workers
-pip install gunicorn
-gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8765
-
-# Variables de entorno de producción
-SECRET_KEY=<random-64-chars>
-ADMIN_TOKEN=<random-secure-token>
-DEBUG=false
-```
-
-Para PostgreSQL, cambiar `DATABASE_URL` a `postgresql+asyncpg://user:pass@host/dbname` e instalar `asyncpg`.
+- **Sin autenticación de usuario**: los favoritos se guardan en `localStorage` del navegador.
+- **SQLite**: adecuado para uso personal. Para múltiples usuarios concurrentes, usar PostgreSQL (`DATABASE_URL=postgresql+asyncpg://...` + `pip install asyncpg`).
+- **Traducción**: los artículos en inglés se muestran en su idioma original hasta que se configura un proveedor.
+- **RT (ES)**: incluida con fiabilidad reducida (0.45) como fuente de contraste editorial.
