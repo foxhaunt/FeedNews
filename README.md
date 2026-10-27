@@ -25,70 +25,70 @@ Agregador personal de noticias con relevancia configurable, perfil histórico y 
 
 ## 1. Fuentes de noticias
 
-37 fuentes activas agrupadas por ámbito geográfico. La columna `fiabilidad` pondera las puntuaciones de relevancia mediante un ajuste suave de ±20% — no suprime ninguna fuente.
+37 fuentes activas agrupadas por ámbito geográfico.
 
 ### España
 
-| Fuente | Línea editorial | Fiabilidad | Estado |
-|---|---|---|---|
-| El País | centroizquierda | 0.90 | ✅ activa |
-| 20 Minutos | centroizquierda | 0.70 | ✅ activa |
-| La Vanguardia | centro | 0.85 | ✅ activa |
-| El Confidencial | centro | 0.80 | ✅ activa |
-| El Mundo | centroderecha | 0.85 | ✅ activa |
-| El Español | centroderecha | 0.75 | ✅ activa |
-| ABC España | centroderecha | 0.80 | ✅ activa |
-| The Objective | centroderecha | 0.75 | ✅ activa |
-| La Bandera | derecha | 0.65 | ✅ activa |
-| OKDIARIO | derecha | 0.60 | ✅ activa |
-| La Gaceta | derecha | 0.60 | ✅ activa |
-| El Diario | izquierda | 0.55 | ❌ desactivada |
+| Fuente | Línea editorial | Estado |
+|---|---|---|
+| El País | centroizquierda | ✅ activa |
+| 20 Minutos | centroizquierda | ✅ activa |
+| La Vanguardia | centro | ✅ activa |
+| El Confidencial | centro | ✅ activa |
+| El Mundo | centroderecha | ✅ activa |
+| El Español | centroderecha | ✅ activa |
+| ABC España | centroderecha | ✅ activa |
+| The Objective | centroderecha | ✅ activa |
+| La Bandera | derecha | ✅ activa |
+| OKDIARIO | derecha | ✅ activa |
+| La Gaceta | derecha | ✅ activa |
+| El Diario | izquierda | ❌ desactivada |
 
 ### Europa
 
-| Fuente | Idioma | Línea editorial | Fiabilidad |
-|---|---|---|---|
-| BBC Europe | EN | centro | 0.95 |
-| POLITICO Europe | EN | centroderecha | 0.90 |
-| Deutsche Welle (EN) | EN | centro | 0.90 |
-| Euronews (ES) | ES | centro | 0.85 |
-| Euronews (EN) | EN | centro | 0.85 |
-| RFI English | EN | centro | 0.85 |
-| Le Monde Diplomatique (ES) | ES | izquierda | 0.85 |
+| Fuente | Idioma | Línea editorial |
+|---|---|---|
+| BBC Europe | EN | centro |
+| POLITICO Europe | EN | centroderecha |
+| Deutsche Welle (EN) | EN | centro |
+| Euronews (ES) | ES | centro |
+| Euronews (EN) | EN | centro |
+| RFI English | EN | centro |
+| Le Monde Diplomatique (ES) | ES | izquierda |
 
 ### Internacional
 
-| Fuente | Idioma | Línea editorial | Fiabilidad |
-|---|---|---|---|
-| BBC World | EN | centro | 0.95 |
-| The Guardian World | EN | centroizquierda | 0.90 |
-| Deutsche Welle World | EN | centro | 0.90 |
-| France 24 (EN) | EN | centro | 0.85 |
-| NPR News | EN | centroizquierda | 0.88 |
-| Al Jazeera | EN | no determinado | 0.80 |
-| RT (ES) | ES | proruso | 0.45 |
+| Fuente | Idioma | Línea editorial |
+|---|---|---|
+| BBC World | EN | centro |
+| The Guardian World | EN | centroizquierda |
+| Deutsche Welle World | EN | centro |
+| France 24 (EN) | EN | centro |
+| NPR News | EN | centroizquierda |
+| Al Jazeera | EN | no determinado |
+| RT (ES) | ES | proruso |
 
 ### Historia (fuentes académicas)
 
-| Fuente | Institución | Tipo | Fiabilidad | Fetch |
-|---|---|---|---|---|
-| El Reto Histórico | — | divulgación | 0.75 | 120 min |
-| Muy Interesante Historia | — | divulgación | 0.80 | 120 min |
-| Hispania Sacra | CSIC | académica | 0.90 | 1440 min |
-| Hispania | CSIC | académica | 0.90 | 1440 min |
-| En la España Medieval | UCM | académica | 0.90 | 1440 min |
+| Fuente | Institución | Tipo | Fetch |
+|---|---|---|---|
+| El Reto Histórico | — | divulgación | 120 min |
+| Muy Interesante Historia | — | divulgación | 120 min |
+| Hispania Sacra | CSIC | académica | 1440 min |
+| Hispania | CSIC | académica | 1440 min |
+| En la España Medieval | UCM | académica | 1440 min |
 
 ### Catolicismo y Tradicionalismo
 
-| Fuente | Orientación | Fiabilidad | Fetch |
-|---|---|---|---|
-| Conferencia Episcopal Española | episcopal oficial | 0.85 | 120 min |
-| Vatican News (ES) | vaticano oficial | 0.85 | 30 min |
-| InfoVaticana | catolicismo tradicional | 0.75 | 60 min |
-| Adelante la Fe | catolicismo tradicional | 0.70 | 120 min |
-| FSSPX.News (ES) | FSSPX | 0.70 | 120 min |
-| Periódico La Esperanza | catolicismo tradicional | 0.65 | 120 min |
-| Un Tradi en el Novus Ordo | catolicismo tradicional | 0.65 | 120 min |
+| Fuente | Orientación | Fetch |
+|---|---|---|
+| InfoVaticana | catolicismo tradicional | 60 min |
+| Adelante la Fe | catolicismo tradicional | 120 min |
+| FSSPX.News (ES) | FSSPX | 120 min |
+| Periódico La Esperanza | catolicismo tradicional | 120 min |
+| Un Tradi en el Novus Ordo | catolicismo tradicional | 120 min |
+| Vatican News (ES) | vaticano oficial | 30 min |
+| Conferencia Episcopal Española | episcopal oficial | 120 min |
 
 ---
 
@@ -139,7 +139,6 @@ puntuación = 0.5 (base)
   + tier-2 kws  → elecciones, crisis, sanciones, OTAN … +0.03/hit (máx +0.09)
   × categoría   → ×0.95 – ×1.25
   × geo         → ×1.05 España · ×1.02 Europa · ×1.00 Internacional
-  × fiabilidad  → ajuste suave ±20% en torno a 0.7
 
 Destacada  ≥ 0.72
 Relevante  ≥ 0.48
@@ -186,7 +185,7 @@ Historia de España e Hispanidad — artículos dedicados a estos temas puntúan
 |---|---|---|
 | **Profundidad** | Resumen >400 chars · `se analiza` · `fuentes primarias` · `contexto histórico` · `excavación arqueológica` | `top 10` · `curiosidades` · `sabías que` · `alucinante` |
 | **Historiográfico** | `nuevo hallazgo` · `fuente inédita` · `debate historiográfico` · fuente UCM / CSIC | — |
-| **Documental** | Alta fiabilidad · `csic` · `ucm` · `universidad` · `real academia` | Baja fiabilidad de fuente |
+| **Documental** | `csic` · `ucm` · `universidad` · `real academia` | — |
 
 ### Distribución actual (99 artículos)
 
@@ -240,7 +239,7 @@ Liturgia tradicional, tomismo y doctrina — artículos dedicados a estos temas 
 |---|---|---|
 | **Profundidad** | `encíclica` · `padres de la iglesia` · `análisis teológico` · `patrística` · Resumen >400 chars | `top 10` · `curiosidades` · `viral` · `alucinante` |
 | **Contexto eclesial** | `magisterio` · `sucesión apostólica` · `dogma de fe` · `concilio de trento` | — |
-| **Calidad** | Alta fiabilidad · `teólogo` · `doctor de la iglesia` | Baja fiabilidad |
+| **Calidad** | `teólogo` · `doctor de la iglesia` | — |
 
 Para ajustar las preferencias edita `app/processing/catolicismo_profile.py` (solo datos, sin lógica) y recalcula:
 
@@ -331,5 +330,5 @@ pytest tests/test_catolicismo_scoring.py -v       # perfil de catolicismo (16 te
 - **Sin autenticación de usuario**: los favoritos se guardan en `localStorage` del navegador.
 - **SQLite**: adecuado para uso personal. Para múltiples usuarios concurrentes, usar PostgreSQL (`DATABASE_URL=postgresql+asyncpg://...` + `pip install asyncpg`).
 - **Traducción**: los artículos en inglés se muestran en su idioma original hasta que se configura un proveedor.
-- **RT (ES)**: incluida con fiabilidad reducida (0.45) como fuente de contraste editorial.
+- **RT (ES)**: incluida como fuente de contraste editorial.
 - **InfoCatólica / Apostolado San Vicente Ferrer**: sin feed RSS verificado — no incorporadas.
