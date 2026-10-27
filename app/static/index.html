@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feed News</title>
+  <style>
+    :root {
+      --bg: #f4f5f7;
+      --surface: #ffffff;
+      --surface2: #f0f2f5;
+      --border: #e0e3e8;
+      --text: #1a1d23;
+      --text-muted: #6b7280;
+      --accent: #1d4ed8;
+      --accent-light: #dbeafe;
+      --featured: #dc2626;
+      --relevant: #d97706;
+      --follow: #6b7280;
+      --tag-bg: #e5e7eb;
+      --tag-text: #374151;
+      --spain: #e50000;
+      --europe: #003399;
+      --intl: #1a6e3e;
+    }
+    [data-theme="dark"] {
+      --bg: #0f1117;
+      --surface: #1c1f26;
+      --surface2: #252932;
+      --border: #2e3340;
+      --text: #e8eaf0;
+      --text-muted: #8b95a8;
+      --accent: #3b82f6;
+      --accent-light: #1e3a5f;
+      --tag-bg: #2e3340;
+      --tag-text: #c4cad6;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; font-size: 15px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Header */
+    header { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+    .header-inner { max-width: 1280px; margin: 0 auto; padding: 0 16px; display: flex; align-items: center; gap: 16px; height: 56px; }
+    .logo { font-size: 1.25rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
+    .logo span { color: var(--text); }
+    .search-wrap { flex: 1; max-width: 480px; position: relative; }
+    .search-wrap input { width: 100%; padding: 7px 12px 7px 36px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-size: 14px; outline: none; }
+    .search-wrap input:focus { border-color: var(--accent); }
+    .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; }
+    .header-actions { display: flex; gap: 8px; align-items: center; margin-left: auto; }
+    .btn-icon { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; cursor: pointer; color: var(--text); font-size: 14px; }
+    .btn-icon:hover { background: var(--surface2); }
+    #refresh-indicator { font-size: 12px; color: var(--text-muted); }
+
+    /* Nav */
+    nav { background: var(--surface); border-bottom: 1px solid var(--border); }
+    .nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 16px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
+    .nav-inner::-webkit-scrollbar { display: none; }
+    .nav-btn { padding: 10px 16px; border: none; background: none; cursor: pointer; color: var(--text-muted); font-size: 14px; font-weight: 500; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s; }
+    .nav-btn:hover { color: var(--text); }
+    .nav-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* Layout */
+    .container { max-width: 1280px; margin: 0 auto; padding: 20px 16px; display: grid; grid-template-columns: 240px 1fr; gap: 24px; }
+    @media (max-width: 900px) { .container { grid-template-columns: 1fr; } .sidebar { display: none; } }
+
+    /* Sidebar */
+    .sidebar {}
+    .filter-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .filter-card h3 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 10px; }
+    .filter-item { display: flex; align-items: center; gap: 8px; padding: 5px 0; cursor: pointer; font-size: 14px; color: var(--text); }
+    .filter-item:hover { color: var(--accent); }
+    .filter-item.active { color: var(--accent); font-weight: 600; }
+    .filter-item input[type=checkbox] { accent-color: var(--accent); }
+    .cat-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+
+    /* Main feed */
+    .feed-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+    .feed-header h2 { font-size: 1.1rem; font-weight: 700; }
+    .feed-meta { font-size: 13px; color: var(--text-muted); }
+    .sort-select { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 5px 8px; font-size: 13px; color: var(--text); cursor: pointer; }
+
+    /* Featured strip */
+    .featured-section { margin-bottom: 24px; }
+    .featured-section h2 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--featured); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+
+    /* Shared badge / tag styles */
+    .card-meta-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .badge { font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+    .badge-featured { background: #fee2e2; color: var(--featured); }
+    .badge-relevant { background: #fef3c7; color: var(--relevant); }
+    .badge-follow { background: var(--tag-bg); color: var(--follow); }
+    .geo-badge { font-size: 11px; padding: 2px 7px; border-radius: 4px; font-weight: 600; }
+    .geo-spain { background: #fff1f1; color: var(--spain); }
+    .geo-europe { background: #eff4ff; color: var(--europe); }
+    .geo-international { background: #f0fdf4; color: var(--intl); }
+    [data-theme="dark"] .geo-spain { background: #3d1111; }
+    [data-theme="dark"] .geo-europe { background: #0f1f40; }
+    [data-theme="dark"] .geo-international { background: #0a2515; }
+    [data-theme="dark"] .badge-featured { background: #3d1111; }
+    [data-theme="dark"] .badge-relevant { background: #3d2a00; }
+    .card-source { font-weight: 600; color: var(--text); }
+    .cat-tag { font-size: 11px; background: var(--tag-bg); color: var(--tag-text); padding: 2px 6px; border-radius: 4px; }
+    .translated-mark { font-size: 11px; color: var(--text-muted); font-style: italic; }
+    .lang-original-mark { font-size: 10px; background: rgba(255,180,0,.12); color: #e8a200; border: 1px solid rgba(255,180,0,.25); border-radius: 4px; padding: 1px 5px; font-weight: 600; letter-spacing: .04em; }
+    .sources-count { font-size: 11px; color: var(--text-muted); }
+
+    /* List cards — single layout for all views */
+    .news-list { display: flex; flex-direction: column; gap: 10px; }
+    .list-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      padding: 14px; display: flex; gap: 16px; cursor: pointer;
+      transition: box-shadow 0.15s, border-color 0.15s;
+    }
+    .list-card:hover { box-shadow: 0 2px 14px rgba(0,0,0,0.09); border-color: var(--accent); }
+
+    /* Thumbnail: fixed 160×120, emoji shown as fallback behind the img */
+    .list-card-thumb {
+      width: 160px; height: 120px; border-radius: 8px; flex-shrink: 0;
+      background: var(--surface2); overflow: hidden; position: relative;
+      display: flex; align-items: center; justify-content: center; font-size: 2rem;
+    }
+    .list-card-thumb img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; border-radius: inherit;
+    }
+
+    .list-card-content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+    .list-card-title { font-size: 15px; font-weight: 700; line-height: 1.35; color: var(--text); }
+    .list-card-summary {
+      font-size: 13px; color: var(--text-muted); line-height: 1.5;
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .list-card-footer { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12px; color: var(--text-muted); margin-top: auto; }
+
+    /* On narrow screens stack the thumbnail above the content */
+    @media (max-width: 600px) {
+      .list-card { flex-direction: column; gap: 10px; }
+      .list-card-thumb { width: 100%; height: 180px; border-radius: 8px 8px 0 0; }
+    }
+
+    /* Pagination */
+    .pagination { display: flex; justify-content: center; gap: 6px; margin-top: 24px; flex-wrap: wrap; }
+    .page-btn { padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); cursor: pointer; font-size: 13px; }
+    .page-btn:hover { background: var(--surface2); }
+    .page-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+    .page-btn:disabled { opacity: 0.4; cursor: default; }
+
+    /* Modal */
+    .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: flex-start; justify-content: center; padding: 32px 16px; overflow-y: auto; }
+    .modal-backdrop.open { display: flex; }
+    .modal { background: var(--surface); border-radius: 16px; max-width: 760px; width: 100%; padding: 28px; position: relative; }
+    .modal-close { position: absolute; top: 16px; right: 16px; background: var(--surface2); border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; color: var(--text); font-size: 16px; display: flex; align-items: center; justify-content: center; }
+    .modal h2 { font-size: 1.35rem; font-weight: 800; line-height: 1.3; margin-bottom: 12px; color: var(--text); }
+    .modal-img { width: 100%; height: 240px; object-fit: cover; border-radius: 10px; margin-bottom: 14px; }
+    .modal-summary { font-size: 15px; line-height: 1.7; color: var(--text); }
+    .modal-meta { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 14px 0; font-size: 13px; color: var(--text-muted); }
+    .modal-source-link { color: var(--accent); font-weight: 600; }
+    .modal-original { margin-top: 16px; padding: 14px; background: var(--surface2); border-radius: 8px; font-size: 13px; color: var(--text-muted); }
+
+    /* Loading */
+    .loading { display: flex; justify-content: center; padding: 48px; }
+    .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty { text-align: center; padding: 48px; color: var(--text-muted); }
+    .empty p { margin-top: 8px; font-size: 14px; }
+
+    /* Toast */
+    .toast { position: fixed; bottom: 24px; right: 24px; background: var(--text); color: var(--bg); padding: 10px 16px; border-radius: 8px; font-size: 13px; z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+    .toast.show { opacity: 1; }
+
+    /* Saved */
+    .saved-indicator { color: #f59e0b; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">Feed<span>News</span></div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="search-input" placeholder="Buscar noticias…" autocomplete="off" />
+    </div>
+    <div class="header-actions">
+      <span id="refresh-indicator"></span>
+      <button class="btn-icon" id="refresh-btn" title="Actualizar">↺</button>
+      <button class="btn-icon" id="saved-btn" title="Guardadas">★</button>
+      <button class="btn-icon" id="theme-btn" title="Cambiar tema">◐</button>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <button class="nav-btn active" data-scope="">Todo</button>
+    <button class="nav-btn" data-scope="spain">🇪🇸 España</button>
+    <button class="nav-btn" data-scope="europe">🇪🇺 Europa</button>
+    <button class="nav-btn" data-scope="international">🌍 Internacional</button>
+  </div>
+</nav>
+
+<div class="container">
+  <aside class="sidebar">
+    <div class="filter-card">
+      <h3>Relevancia</h3>
+      <div class="filter-item" data-relevance="" id="rel-all">
+        <span>Todas</span>
+      </div>
+      <div class="filter-item" data-relevance="featured" id="rel-featured">
+        <span style="color:var(--featured)">● Destacadas</span>
+      </div>
+      <div class="filter-item" data-relevance="relevant" id="rel-relevant">
+        <span style="color:var(--relevant)">● Relevantes</span>
+      </div>
+      <div class="filter-item" data-relevance="follow" id="rel-follow">
+        <span style="color:var(--follow)">● Seguimiento</span>
+      </div>
+    </div>
+    <div class="filter-card">
+      <h3>Categorías</h3>
+      <div id="category-filters"></div>
+    </div>
+  </aside>
+
+  <main>
+    <div id="featured-section" class="featured-section" style="display:none">
+      <h2>🔴 Noticias destacadas</h2>
+      <div id="featured-grid" class="news-list"></div>
+    </div>
+
+    <div class="feed-header">
+      <h2 id="feed-title">Últimas noticias</h2>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span id="feed-meta" class="feed-meta"></span>
+        <select class="sort-select" id="sort-select">
+          <option value="relevance">Por relevancia</option>
+          <option value="published_at">Más recientes</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="news-list" class="news-list"></div>
+    <div id="pagination" class="pagination"></div>
+  </main>
+</div>
+
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modal-close">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = '';
+let state = {
+  scope: '',
+  category: '',
+  relevance: '',
+  search: '',
+  sort: 'relevance',
+  page: 1,
+  total: 0,
+  saved: JSON.parse(localStorage.getItem('savedNews') || '[]'),
+  showSaved: false,
+};
+
+// ---- Utils ----
+function ago(date) {
+  const d = new Date(date);
+  const diff = (Date.now() - d.getTime()) / 1000;
+  if (diff < 60) return 'hace un momento';
+  if (diff < 3600) return `hace ${Math.floor(diff/60)}m`;
+  if (diff < 86400) return `hace ${Math.floor(diff/3600)}h`;
+  return d.toLocaleDateString('es-ES', {day:'numeric',month:'short'});
+}
+function geoLabel(scope) {
+  return {spain:'España',europe:'Europa',international:'Internacional'}[scope] || scope;
+}
+function geoCls(scope) {
+  return `geo-badge geo-${scope}`;
+}
+function relBadge(level) {
+  const map = {featured:['badge-featured','Destacada'],relevant:['badge-relevant','Relevante'],follow:['badge-follow','Seguimiento']};
+  const [cls,lbl] = map[level] || ['badge-follow',''];
+  return `<span class="badge ${cls}">${lbl}</span>`;
+}
+function isSaved(id) { return state.saved.includes(id); }
+function toggleSave(id) {
+  if (isSaved(id)) state.saved = state.saved.filter(x=>x!==id);
+  else state.saved.push(id);
+  localStorage.setItem('savedNews', JSON.stringify(state.saved));
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+// ---- API ----
+async function apiFetch(path) {
+  const r = await fetch(API + path);
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+
+// ---- Load categories ----
+async function loadCategories() {
+  try {
+    const cats = await apiFetch('/api/categories');
+    const el = document.getElementById('category-filters');
+    el.innerHTML = `<div class="filter-item ${!state.category?'active':''}" data-cat="">
+      <span>Todas</span></div>` +
+      cats.map(c=>`<div class="filter-item ${state.category===c.slug?'active':''}" data-cat="${c.slug}">
+        <span>${c.icon} ${c.name_es}</span></div>`).join('');
+    el.querySelectorAll('[data-cat]').forEach(btn => {
+      btn.addEventListener('click', ()=>{
+        state.category = btn.dataset.cat;
+        state.page = 1;
+        loadNews();
+        el.querySelectorAll('[data-cat]').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  } catch(e) { console.error('Categories error', e); }
+}
+
+// ---- Load featured ----
+async function loadFeatured() {
+  if (state.showSaved || state.search || state.relevance || state.category) {
+    document.getElementById('featured-section').style.display='none';
+    return;
+  }
+  try {
+    const params = new URLSearchParams({limit:6});
+    if (state.scope) params.set('geo', state.scope);
+    const items = await apiFetch(`/api/news/featured?${params}`);
+    const sec = document.getElementById('featured-section');
+    if (!items.length) { sec.style.display='none'; return; }
+    sec.style.display='block';
+    document.getElementById('featured-grid').innerHTML = items.map(renderListCard).join('');
+    attachCardEvents();
+  } catch(e) { document.getElementById('featured-section').style.display='none'; }
+}
+
+// ---- Load news ----
+async function loadNews() {
+  const listEl = document.getElementById('news-list');
+  listEl.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+  document.getElementById('pagination').innerHTML = '';
+
+  if (state.showSaved) {
+    renderSaved();
+    return;
+  }
+
+  try {
+    const params = new URLSearchParams();
+    if (state.scope) params.set('geo', state.scope);
+    if (state.category) params.set('category', state.category);
+    if (state.relevance) params.set('relevance', state.relevance);
+    if (state.search) params.set('q', state.search);
+    params.set('sort_by', state.sort);
+    params.set('page', state.page);
+    params.set('page_size', 20);
+
+    const data = await apiFetch(`/api/news?${params}`);
+    state.total = data.total;
+
+    // Build descriptive header reflecting all active filters
+    let titleParts = [];
+    if (state.scope) titleParts.push(geoLabel(state.scope));
+    if (state.category) {
+      // Find category name from already-loaded sidebar elements
+      const catEl = document.querySelector(`[data-cat="${state.category}"] span`);
+      titleParts.push(catEl ? catEl.textContent.trim() : state.category);
+    }
+    if (state.relevance === 'featured') titleParts.push('Destacadas');
+    else if (state.relevance === 'relevant') titleParts.push('Relevantes');
+    if (state.search) titleParts.push(`"${state.search}"`);
+    const feedTitle = titleParts.length ? titleParts.join(' · ') : 'Todas las noticias';
+    document.getElementById('feed-title').textContent = feedTitle;
+    document.getElementById('feed-meta').textContent = `${data.total} noticias`;
+
+    if (!data.items.length) {
+      listEl.innerHTML = '<div class="empty"><div style="font-size:2rem">📭</div><p>No se encontraron noticias.</p></div>';
+      return;
+    }
+    listEl.innerHTML = data.items.map(renderListCard).join('');
+    attachCardEvents();
+    renderPagination(data.pages);
+  } catch(e) {
+    listEl.innerHTML = `<div class="empty"><div style="font-size:2rem">⚠️</div><p>Error cargando noticias.<br><small>${e.message}</small></p></div>`;
+  }
+}
+
+// ---- Renders ----
+function catTags(cats) {
+  return (cats||[]).slice(0,3).map(c=>`<span class="cat-tag">${c.icon} ${c.name_es}</span>`).join('');
+}
+
+function translationBadge(n) {
+  if (n.language_original === 'es') return '';
+  if (n.translation_status === 'done') {
+    return `<span class="translated-mark">Traducido del ${langName(n.language_original)}</span>`;
+  }
+  return `<span class="lang-original-mark" title="Traducción pendiente">${langName(n.language_original).toUpperCase()}</span>`;
+}
+
+function geoEmoji(scope) {
+  return scope==='spain'?'🇪🇸':scope==='europe'?'🇪🇺':'🌍';
+}
+
+// Unified thumbnail: emoji always visible as fallback; img overlays it when it loads.
+// onerror removes the img, revealing the emoji behind it — card size never changes.
+function thumbHtml(n) {
+  const img = n.image_url
+    ? `<img src="${esc(n.image_url)}" alt="" loading="lazy" onerror="this.remove()" />`
+    : '';
+  return `<div class="list-card-thumb">${img}${geoEmoji(n.geographic_scope)}</div>`;
+}
+
+// Single render function used by all views (main feed, featured, saved).
+function renderListCard(n) {
+  const title = n.title_es || n.title_original;
+  return `<div class="list-card" data-id="${n.id}">
+    ${thumbHtml(n)}
+    <div class="list-card-content">
+      <div class="card-meta-top">
+        ${relBadge(n.relevance_level)}
+        <span class="${geoCls(n.geographic_scope)}">${geoLabel(n.geographic_scope)}</span>
+        ${catTags(n.categories)}
+        ${translationBadge(n)}
+      </div>
+      <div class="list-card-title">${esc(title)}</div>
+      ${n.summary_es ? `<div class="list-card-summary">${esc(n.summary_es)}</div>` : ''}
+      <div class="list-card-footer">
+        <span class="card-source">${esc(n.source?.name||'')}</span>
+        <span>${ago(n.published_at)}</span>
+        ${(n.source_count||1)>1 ? `<span class="sources-count">📰 ${n.source_count} fuentes</span>` : ''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function langName(code) {
+  const m = {en:'inglés',fr:'francés',de:'alemán',it:'italiano',pt:'portugués',ca:'catalán',eu:'euskera',nl:'neerlandés',ru:'ruso',ar:'árabe',uk:'ucraniano'};
+  return m[code] || code;
+}
+
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ---- Pagination ----
+function renderPagination(pages) {
+  if (pages <= 1) return;
+  const el = document.getElementById('pagination');
+  let html = '';
+  html += `<button class="page-btn" ${state.page<=1?'disabled':''} onclick="goPage(${state.page-1})">‹</button>`;
+  const start = Math.max(1, state.page-2);
+  const end = Math.min(pages, state.page+2);
+  if (start>1) html += `<button class="page-btn" onclick="goPage(1)">1</button>${start>2?'<span style="padding:0 4px">…</span>':''}`;
+  for (let p=start;p<=end;p++) {
+    html += `<button class="page-btn ${p===state.page?'active':''}" onclick="goPage(${p})">${p}</button>`;
+  }
+  if (end<pages) html += `${end<pages-1?'<span style="padding:0 4px">…</span>':''}<button class="page-btn" onclick="goPage(${pages})">${pages}</button>`;
+  html += `<button class="page-btn" ${state.page>=pages?'disabled':''} onclick="goPage(${state.page+1})">›</button>`;
+  el.innerHTML = html;
+}
+function goPage(p) { state.page=p; loadNews(); window.scrollTo({top:0,behavior:'smooth'}); }
+
+// ---- Card click -> modal ----
+function attachCardEvents() {
+  document.querySelectorAll('[data-id]').forEach(el => {
+    el.addEventListener('click', ()=>openModal(parseInt(el.dataset.id)));
+  });
+}
+
+async function openModal(id) {
+  const backdrop = document.getElementById('modal-backdrop');
+  const content = document.getElementById('modal-content');
+  backdrop.classList.add('open');
+  content.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+  try {
+    const n = await apiFetch(`/api/news/${id}`);
+    const title = n.title_es || n.title_original;
+    const saved = isSaved(id);
+    content.innerHTML = `
+      ${n.image_url ? `<img class="modal-img" src="${esc(n.image_url)}" alt="" onerror="this.style.display='none'" />` : ''}
+      <div class="card-meta-top" style="margin-bottom:10px">
+        ${relBadge(n.relevance_level)}
+        <span class="${geoCls(n.geographic_scope)}">${geoLabel(n.geographic_scope)}</span>
+        ${catTags(n.categories)}
+        ${translationBadge(n)}
+      </div>
+      <h2>${esc(title)}</h2>
+      <div class="modal-meta">
+        <strong class="card-source">${esc(n.source?.name||'')}</strong>
+        <span>${ago(n.published_at)}</span>
+        <a class="modal-source-link" href="${esc(n.url)}" target="_blank" rel="noopener noreferrer">Ver artículo original ↗</a>
+        <button onclick="(function(){toggleSave(${id});this.textContent=isSaved(${id})?'★ Guardada':'☆ Guardar';showToast(isSaved(${id})?'Noticia guardada':'Noticia eliminada de guardadas')}).call(this)" style="background:none;border:1px solid var(--border);border-radius:6px;padding:3px 10px;cursor:pointer;font-size:13px;color:var(--text)">${saved?'★ Guardada':'☆ Guardar'}</button>
+      </div>
+      ${n.summary_es ? `<div class="modal-summary">${esc(n.summary_es)}</div>` : ''}
+      ${n.summary_original && n.language_original!=='es' ? `
+        <div class="modal-original">
+          <strong>Resumen original (${langName(n.language_original)}):</strong><br>
+          ${esc(n.summary_original)}
+        </div>` : ''}
+    `;
+  } catch(e) {
+    content.innerHTML = `<p>Error cargando noticia: ${e.message}</p>`;
+  }
+}
+
+// ---- Saved view ----
+async function renderSaved() {
+  const listEl = document.getElementById('news-list');
+  document.getElementById('feed-title').textContent = 'Noticias guardadas';
+  if (!state.saved.length) {
+    listEl.innerHTML = '<div class="empty"><div style="font-size:2rem">☆</div><p>No tienes noticias guardadas.</p></div>';
+    return;
+  }
+  try {
+    const items = await Promise.all(state.saved.map(id => apiFetch(`/api/news/${id}`).catch(()=>null)));
+    const valid = items.filter(Boolean);
+    if (!valid.length) { listEl.innerHTML = '<div class="empty"><p>No se pudo cargar.</p></div>'; return; }
+    listEl.innerHTML = valid.map(renderListCard).join('');
+    attachCardEvents();
+  } catch(e) {
+    listEl.innerHTML = `<div class="empty"><p>Error: ${e.message}</p></div>`;
+  }
+}
+
+// ---- Event listeners ----
+document.querySelectorAll('.nav-btn[data-scope]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    state.scope = btn.dataset.scope;
+    state.page = 1;
+    state.showSaved = false;
+    document.querySelectorAll('.nav-btn[data-scope]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    loadFeatured();
+    loadNews();
+  });
+});
+
+document.querySelectorAll('.filter-item[data-relevance]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    state.relevance = btn.dataset.relevance;
+    state.page = 1;
+    document.querySelectorAll('.filter-item[data-relevance]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    loadFeatured();
+    loadNews();
+  });
+});
+
+let searchTimer;
+document.getElementById('search-input').addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(()=>{
+    state.search = e.target.value.trim();
+    state.page = 1;
+    loadFeatured();
+    loadNews();
+  }, 400);
+});
+
+document.getElementById('sort-select').addEventListener('change', e => {
+  state.sort = e.target.value;
+  state.page = 1;
+  loadNews();
+});
+
+document.getElementById('refresh-btn').addEventListener('click', ()=>{
+  document.getElementById('refresh-indicator').textContent = 'Actualizando…';
+  Promise.all([loadFeatured(), loadNews()]).then(()=>{
+    const now = new Date();
+    document.getElementById('refresh-indicator').textContent = `Actualizado ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+  });
+});
+
+document.getElementById('saved-btn').addEventListener('click', ()=>{
+  state.showSaved = !state.showSaved;
+  document.getElementById('featured-section').style.display = state.showSaved?'none':'';
+  if (!state.showSaved) { loadFeatured(); loadNews(); } else { renderSaved(); }
+  document.getElementById('saved-btn').style.color = state.showSaved ? '#f59e0b' : '';
+});
+
+document.getElementById('theme-btn').addEventListener('click', ()=>{
+  const html = document.documentElement;
+  const cur = html.getAttribute('data-theme');
+  html.setAttribute('data-theme', cur==='dark'?'light':'dark');
+  localStorage.setItem('theme', html.getAttribute('data-theme'));
+});
+
+document.getElementById('modal-close').addEventListener('click', ()=>{
+  document.getElementById('modal-backdrop').classList.remove('open');
+});
+document.getElementById('modal-backdrop').addEventListener('click', e=>{
+  if (e.target === document.getElementById('modal-backdrop'))
+    document.getElementById('modal-backdrop').classList.remove('open');
+});
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') document.getElementById('modal-backdrop').classList.remove('open'); });
+
+// ---- Init ----
+(function init() {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+  loadCategories();
+  loadFeatured();
+  loadNews();
+  // Auto-refresh every 5 minutes
+  setInterval(()=>{ loadFeatured(); loadNews(); }, 5 * 60 * 1000);
+})();
+</script>
+</body>
+</html>
