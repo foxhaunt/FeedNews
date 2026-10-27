@@ -1,57 +1,161 @@
-INFO:     Started server process [4073786]
+INFO:     Started server process [4075765]
 INFO:     Waiting for application startup.
-2026-10-27 09:00:16,277 INFO app.main: Starting Feed News v1.0.0
-2026-10-27 09:00:16,331 WARNING tzlocal: /etc/timezone is deprecated in some distros, and no longer reliable. tzlocal is ignoring it, and you can likely delete it.
-2026-10-27 09:00:16,331 INFO apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2026-10-27 09:00:16,331 INFO apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2026-10-27 09:00:16,331 INFO apscheduler.scheduler: Added job "RSS Ingestion" to job store "default"
-2026-10-27 09:00:16,331 INFO apscheduler.scheduler: Added job "News Processing" to job store "default"
-2026-10-27 09:00:16,331 INFO apscheduler.scheduler: Scheduler started
-2026-10-27 09:00:16,331 INFO app.scheduler.tasks: Scheduler started (ingestion every 15m, processing every 5m)
-2026-10-27 09:00:16,450 INFO app.scheduler.tasks: Starting scheduled ingestion cycle
-2026-10-27 09:00:16,451 INFO app.scheduler.tasks: Starting processing task
+2026-10-27 09:03:59,929 INFO app.main: Starting Feed News v1.0.0
+2026-10-27 09:03:59,977 WARNING tzlocal: /etc/timezone is deprecated in some distros, and no longer reliable. tzlocal is ignoring it, and you can likely delete it.
+2026-10-27 09:03:59,977 INFO apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-10-27 09:03:59,977 INFO apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-10-27 09:03:59,977 INFO apscheduler.scheduler: Added job "RSS Ingestion" to job store "default"
+2026-10-27 09:03:59,977 INFO apscheduler.scheduler: Added job "News Processing" to job store "default"
+2026-10-27 09:03:59,977 INFO apscheduler.scheduler: Scheduler started
+2026-10-27 09:03:59,977 INFO app.scheduler.tasks: Scheduler started (ingestion every 15m, processing every 5m)
+2026-10-27 09:04:00,099 INFO app.scheduler.tasks: Starting scheduled ingestion cycle
+2026-10-27 09:04:00,101 INFO app.scheduler.tasks: Starting processing task
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8765 (Press CTRL+C to quit)
-2026-10-27 09:00:16,453 INFO app.ingestion.manager: Running ingestion for 15 sources
-2026-10-27 09:00:16,489 INFO app.processing.deduplication: Deduplication: marked 0 duplicates out of 0 items
-2026-10-27 09:00:17,756 INFO app.processing.grouping: Grouping completed for window of 24h
-2026-10-27 09:00:17,855 INFO app.ingestion.rss_fetcher: Fetched 20 articles from https://www.abc.es/rss/feeds/abc_EspanaEspana.xml
-2026-10-27 09:00:17,861 INFO app.ingestion.rss_fetcher: Fetched 10 articles from https://rss.dw.com/rdf/rss-en-world
-2026-10-27 09:00:18,115 INFO app.ingestion.rss_fetcher: Fetched 15 articles from https://rss.elconfidencial.com/espana/
-2026-10-27 09:00:18,152 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://rss.dw.com/rdf/rss-en-all
-2026-10-27 09:00:18,160 INFO app.ingestion.rss_fetcher: Fetched 10 articles from https://mondiplo.com/spip.php?page=backend
-2026-10-27 09:00:18,245 INFO app.ingestion.rss_fetcher: Fetched 20 articles from https://theobjective.com/feed/
-2026-10-27 09:00:18,274 INFO app.ingestion.manager: Source ABC España: ingested 4 new articles
-2026-10-27 09:00:18,305 INFO app.ingestion.manager: Source The Objective: ingested 5 new articles
-2026-10-27 09:00:18,578 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://www.20minutos.es/rss/
-2026-10-27 09:00:18,587 WARNING app.translation.translator: Translation: 0 items translated, 1 skipped (provider unavailable/rate-limited)
-2026-10-27 09:00:18,587 INFO app.scheduler.tasks: Processing task completed
-2026-10-27 09:00:18,597 INFO app.ingestion.manager: Source Deutsche Welle (EN): ingested 1 new articles
-2026-10-27 09:00:18,624 INFO app.ingestion.rss_fetcher: Fetched 10 articles from https://labandera.es/feed/
-2026-10-27 09:00:18,627 INFO app.ingestion.manager: Source 20 Minutos: ingested 0 new articles
-2026-10-27 09:00:18,631 INFO app.ingestion.manager: Source La Bandera: ingested 0 new articles
-2026-10-27 09:00:18,696 INFO app.ingestion.manager: Source Deutsche Welle World (EN): ingested 0 new articles
-2026-10-27 09:00:18,716 INFO app.ingestion.manager: Source Le Monde Diplomatique (ES): ingested 0 new articles
-2026-10-27 09:00:18,751 INFO app.ingestion.rss_fetcher: Fetched 10 articles from https://gaceta.es/feed/
-2026-10-27 09:00:18,761 INFO app.ingestion.manager: Source La Gaceta: ingested 2 new articles
-2026-10-27 09:00:18,779 INFO app.ingestion.rss_fetcher: Fetched 10 articles from https://feeds.npr.org/1001/rss.xml
-2026-10-27 09:00:18,783 INFO app.ingestion.manager: Source NPR News: ingested 0 new articles
-2026-10-27 09:00:18,803 INFO app.ingestion.manager: Source El Confidencial: ingested 0 new articles
-2026-10-27 09:00:18,876 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://www.lavanguardia.com/rss/home.xml
-2026-10-27 09:00:18,910 INFO app.ingestion.manager: Source La Vanguardia: ingested 4 new articles
-2026-10-27 09:00:19,093 INFO app.ingestion.rss_fetcher: Fetched 30 articles from https://www.elespanol.com/rss/
-2026-10-27 09:00:19,113 INFO app.ingestion.manager: Source El Español: ingested 2 new articles
-2026-10-27 09:00:19,301 INFO app.ingestion.rss_fetcher: Fetched 22 articles from https://www.rfi.fr/en/rss
-2026-10-27 09:00:19,309 INFO app.ingestion.manager: Source RFI English: ingested 0 new articles
-2026-10-27 09:00:19,502 INFO app.ingestion.rss_fetcher: Fetched 10 articles from https://actualidad.rt.com/rss
-2026-10-27 09:00:19,513 INFO app.ingestion.manager: Source RT (ES): ingested 1 new articles
-2026-10-27 09:00:23,701 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://okdiario.com/feed/
+2026-10-27 09:04:00,103 INFO app.ingestion.manager: Running ingestion for 1 sources
+2026-10-27 09:04:00,112 INFO app.processing.deduplication: Deduplication: marked 0 duplicates out of 0 items
+2026-10-27 09:04:01,378 INFO app.processing.grouping: Grouping completed for window of 24h
+2026-10-27 09:04:01,743 INFO app.ingestion.rss_fetcher: Fetched 33 articles from https://feeds.bbci.co.uk/news/world/rss.xml
+2026-10-27 09:04:01,758 INFO app.ingestion.manager: Source BBC World: ingested 0 new articles
+2026-10-27 09:04:01,764 INFO app.ingestion.manager: Processed 0 news items
+2026-10-27 09:04:01,765 INFO app.scheduler.tasks: Ingestion cycle completed
+2026-10-27 09:04:03,312 WARNING app.translation.translator: Translation: 1 items translated, 1 skipped (provider unavailable/rate-limited)
+2026-10-27 09:04:03,312 INFO app.scheduler.tasks: Processing task completed
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
 Seeding completed.
-INFO:     127.0.0.1:57478 - "GET / HTTP/1.1" 200 OK
-2026-10-27 09:00:23,771 INFO app.ingestion.manager: Source OKDIARIO: ingested 9 new articles
-INFO:     127.0.0.1:57478 - "GET /api/categories HTTP/1.1" 200 OK
-INFO:     127.0.0.1:57490 - "GET /api/news?sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
-2026-10-27 09:00:23,901 INFO app.ingestion.manager: Processed 28 news items
-2026-10-27 09:00:23,901 INFO app.scheduler.tasks: Ingestion cycle completed
-INFO:     127.0.0.1:57490 - "GET /api/news?category=politica&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:48168 - "GET /api/news?category=historia&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     192.168.1.253:37514 - "GET / HTTP/1.1" 200 OK
+INFO:     192.168.1.253:37514 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     192.168.1.253:37528 - "GET /api/news?sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     192.168.1.253:37528 - "GET /favicon.ico HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38182 - "GET /api/news?category=historia&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     192.168.1.253:58938 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     192.168.1.253:58946 - "GET /api/news?sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     192.168.1.253:32890 - "GET /api/news?geo=spain&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     192.168.1.253:58588 - "GET /api/news?geo=international&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     192.168.1.253:58588 - "GET /api/news?geo=europe&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     192.168.1.253:58588 - "GET /api/news?sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34498 - "GET /api/news?category=historia&q=cristianos&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60070 - "GET /api/news/3581 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60086 - "GET /api/news/featured?limit=20&category=historia HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60086 - "GET /api/news?category=historia&relevance=relevant&q=cristianos&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60086 - "GET /api/news?category=historia&relevance=relevant&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+2026-10-27 09:08:59,978 INFO apscheduler.executors.default: Running job "News Processing (trigger: interval[0:05:00], next run at: 2026-10-27 09:13:59 CET)" (scheduled at 2026-10-27 09:08:59.977670+01:00)
+2026-10-27 09:08:59,978 INFO app.scheduler.tasks: Starting processing task
+2026-10-27 09:08:59,984 INFO app.processing.deduplication: Deduplication: marked 0 duplicates out of 0 items
+2026-10-27 09:09:01,221 INFO app.processing.grouping: Grouping completed for window of 24h
+2026-10-27 09:09:01,669 WARNING app.translation.translator: Translation: 0 items translated, 1 skipped (provider unavailable/rate-limited)
+2026-10-27 09:09:01,669 INFO app.scheduler.tasks: Processing task completed
+2026-10-27 09:09:01,669 INFO apscheduler.executors.default: Job "News Processing (trigger: interval[0:05:00], next run at: 2026-10-27 09:13:59 CET)" executed successfully
+INFO:     127.0.0.1:48580 - "GET /api/news?category=historia&relevance=relevant&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+2026-10-27 09:13:59,977 INFO apscheduler.executors.default: Running job "News Processing (trigger: interval[0:05:00], next run at: 2026-10-27 09:18:59 CET)" (scheduled at 2026-10-27 09:13:59.977670+01:00)
+2026-10-27 09:13:59,977 INFO app.scheduler.tasks: Starting processing task
+2026-10-27 09:13:59,982 INFO app.processing.deduplication: Deduplication: marked 0 duplicates out of 0 items
+2026-10-27 09:14:01,177 INFO app.processing.grouping: Grouping completed for window of 24h
+2026-10-27 09:14:01,604 WARNING app.translation.translator: Translation: 0 items translated, 1 skipped (provider unavailable/rate-limited)
+2026-10-27 09:14:01,604 INFO app.scheduler.tasks: Processing task completed
+2026-10-27 09:14:01,604 INFO apscheduler.executors.default: Job "News Processing (trigger: interval[0:05:00], next run at: 2026-10-27 09:18:59 CET)" executed successfully
+INFO:     127.0.0.1:47328 - "GET /api/news?category=historia&relevance=relevant&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+2026-10-27 09:18:59,978 INFO apscheduler.executors.default: Running job "RSS Ingestion (trigger: interval[0:15:00], next run at: 2026-10-27 09:33:59 CET)" (scheduled at 2026-10-27 09:18:59.977594+01:00)
+2026-10-27 09:18:59,978 INFO app.scheduler.tasks: Starting scheduled ingestion cycle
+2026-10-27 09:18:59,978 INFO apscheduler.executors.default: Running job "News Processing (trigger: interval[0:05:00], next run at: 2026-10-27 09:23:59 CET)" (scheduled at 2026-10-27 09:18:59.977670+01:00)
+2026-10-27 09:18:59,978 INFO app.scheduler.tasks: Starting processing task
+2026-10-27 09:18:59,980 INFO app.ingestion.manager: Running ingestion for 9 sources
+2026-10-27 09:18:59,985 INFO app.processing.deduplication: Deduplication: marked 0 duplicates out of 0 items
+2026-10-27 09:19:01,237 INFO app.processing.grouping: Grouping completed for window of 24h
+2026-10-27 09:19:01,356 INFO app.ingestion.rss_fetcher: Fetched 27 articles from https://e00-elmundo.uecdn.es/elmundo/rss/portada.xml
+2026-10-27 09:19:01,402 INFO app.ingestion.rss_fetcher: Fetched 45 articles from https://www.theguardian.com/world/rss
+2026-10-27 09:19:01,577 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada
+2026-10-27 09:19:01,788 INFO app.ingestion.manager: Source El Mundo: ingested 2 new articles
+2026-10-27 09:19:01,828 INFO app.ingestion.rss_fetcher: Fetched 10 articles from https://www.politico.eu/rss
+2026-10-27 09:19:01,836 WARNING app.translation.translator: Translation: 0 items translated, 1 skipped (provider unavailable/rate-limited)
+2026-10-27 09:19:01,836 INFO app.scheduler.tasks: Processing task completed
+2026-10-27 09:19:01,836 INFO apscheduler.executors.default: Job "News Processing (trigger: interval[0:05:00], next run at: 2026-10-27 09:23:59 CET)" executed successfully
+2026-10-27 09:19:01,849 INFO app.ingestion.manager: Source El País: ingested 2 new articles
+2026-10-27 09:19:01,871 INFO app.ingestion.manager: Source POLITICO Europe: ingested 1 new articles
+2026-10-27 09:19:01,903 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://feeds.feedburner.com/euronews/en/news/
+2026-10-27 09:19:01,920 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://feeds.feedburner.com/euronews/es/news/
+2026-10-27 09:19:01,938 INFO app.ingestion.manager: Source Euronews (EN): ingested 0 new articles
+2026-10-27 09:19:01,955 INFO app.ingestion.manager: Source Euronews (ES): ingested 0 new articles
+2026-10-27 09:19:01,977 INFO app.ingestion.rss_fetcher: Fetched 24 articles from https://www.france24.com/en/rss
+2026-10-27 09:19:01,987 INFO app.ingestion.rss_fetcher: Fetched 25 articles from https://www.aljazeera.com/xml/rss/all.xml
+2026-10-27 09:19:02,000 INFO app.ingestion.manager: Source Al Jazeera: ingested 1 new articles
+2026-10-27 09:19:02,024 INFO app.ingestion.manager: Source France 24 (EN): ingested 3 new articles
+2026-10-27 09:19:02,052 INFO app.ingestion.manager: Source The Guardian World: ingested 0 new articles
+2026-10-27 09:19:02,138 INFO app.ingestion.rss_fetcher: Fetched 21 articles from https://feeds.bbci.co.uk/news/world/europe/rss.xml
+2026-10-27 09:19:02,145 INFO app.ingestion.manager: Source BBC Europe: ingested 0 new articles
+2026-10-27 09:19:02,184 INFO app.ingestion.manager: Processed 9 news items
+2026-10-27 09:19:02,184 INFO app.scheduler.tasks: Ingestion cycle completed
+2026-10-27 09:19:02,184 INFO apscheduler.executors.default: Job "RSS Ingestion (trigger: interval[0:15:00], next run at: 2026-10-27 09:33:59 CET)" executed successfully
+INFO:     127.0.0.1:42272 - "GET /api/news?category=historia&relevance=relevant&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+2026-10-27 09:23:59,978 INFO apscheduler.executors.default: Running job "News Processing (trigger: interval[0:05:00], next run at: 2026-10-27 09:28:59 CET)" (scheduled at 2026-10-27 09:23:59.977670+01:00)
+2026-10-27 09:23:59,978 INFO app.scheduler.tasks: Starting processing task
+2026-10-27 09:23:59,984 INFO app.processing.deduplication: Deduplication: marked 0 duplicates out of 0 items
+2026-10-27 09:24:01,168 INFO app.processing.grouping: Grouping completed for window of 24h
+2026-10-27 09:24:09,723 WARNING app.translation.translator: Translation: 5 items translated, 1 skipped (provider unavailable/rate-limited)
+2026-10-27 09:24:09,724 INFO app.scheduler.tasks: Processing task completed
+2026-10-27 09:24:09,724 INFO apscheduler.executors.default: Job "News Processing (trigger: interval[0:05:00], next run at: 2026-10-27 09:28:59 CET)" executed successfully
+INFO:     127.0.0.1:55936 - "GET /api/news?category=historia&relevance=relevant&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+2026-10-27 09:28:59,977 INFO apscheduler.executors.default: Running job "News Processing (trigger: interval[0:05:00], next run at: 2026-10-27 09:33:59 CET)" (scheduled at 2026-10-27 09:28:59.977670+01:00)
+2026-10-27 09:28:59,977 INFO app.scheduler.tasks: Starting processing task
+2026-10-27 09:28:59,983 INFO app.processing.deduplication: Deduplication: marked 0 duplicates out of 0 items
+2026-10-27 09:29:01,179 INFO app.processing.grouping: Grouping completed for window of 24h
+2026-10-27 09:29:01,619 WARNING app.translation.translator: Translation: 0 items translated, 1 skipped (provider unavailable/rate-limited)
+2026-10-27 09:29:01,619 INFO app.scheduler.tasks: Processing task completed
+2026-10-27 09:29:01,619 INFO apscheduler.executors.default: Job "News Processing (trigger: interval[0:05:00], next run at: 2026-10-27 09:33:59 CET)" executed successfully
+INFO:     127.0.0.1:60854 - "GET /api/news/3637 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49426 - "GET /api/news?category=historia&relevance=relevant&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48512 - "GET /api/news?category=historia&relevance=relevant&sort_by=relevance&page=2&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51174 - "GET /api/news/3634 HTTP/1.1" 200 OK
+2026-10-27 09:33:59,978 INFO apscheduler.executors.default: Running job "RSS Ingestion (trigger: interval[0:15:00], next run at: 2026-10-27 09:48:59 CET)" (scheduled at 2026-10-27 09:33:59.977594+01:00)
+2026-10-27 09:33:59,978 INFO app.scheduler.tasks: Starting scheduled ingestion cycle
+2026-10-27 09:33:59,978 INFO apscheduler.executors.default: Running job "News Processing (trigger: interval[0:05:00], next run at: 2026-10-27 09:38:59 CET)" (scheduled at 2026-10-27 09:33:59.977670+01:00)
+2026-10-27 09:33:59,978 INFO app.scheduler.tasks: Starting processing task
+2026-10-27 09:33:59,980 INFO app.ingestion.manager: Running ingestion for 15 sources
+2026-10-27 09:33:59,986 INFO app.processing.deduplication: Deduplication: marked 0 duplicates out of 0 items
+2026-10-27 09:34:01,151 INFO app.processing.grouping: Grouping completed for window of 24h
+2026-10-27 09:34:01,278 INFO app.ingestion.rss_fetcher: Fetched 20 articles from https://www.abc.es/rss/feeds/abc_EspanaEspana.xml
+2026-10-27 09:34:01,290 INFO app.ingestion.rss_fetcher: Fetched 27 articles from https://feeds.bbci.co.uk/news/world/rss.xml
+2026-10-27 09:34:01,346 INFO app.ingestion.rss_fetcher: Fetched 15 articles from https://rss.elconfidencial.com/espana/
+2026-10-27 09:34:01,493 INFO app.ingestion.rss_fetcher: Fetched 20 articles from https://theobjective.com/feed/
+2026-10-27 09:34:01,498 INFO app.ingestion.rss_fetcher: Fetched 10 articles from https://rss.dw.com/rdf/rss-en-world
+2026-10-27 09:34:01,522 INFO app.ingestion.rss_fetcher: Fetched 30 articles from https://www.elespanol.com/rss/
+2026-10-27 09:34:01,559 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://rss.dw.com/rdf/rss-en-all
+2026-10-27 09:34:01,624 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://www.lavanguardia.com/rss/home.xml
+2026-10-27 09:34:01,644 INFO app.ingestion.manager: Source ABC España: ingested 2 new articles
+2026-10-27 09:34:01,677 INFO app.ingestion.manager: Source The Objective: ingested 8 new articles
+2026-10-27 09:34:01,693 INFO app.ingestion.manager: Source El Español: ingested 1 new articles
+2026-10-27 09:34:01,701 INFO app.ingestion.manager: Source Deutsche Welle World (EN): ingested 0 new articles
+2026-10-27 09:34:01,714 INFO app.ingestion.rss_fetcher: Fetched 10 articles from https://labandera.es/feed/
+2026-10-27 09:34:01,730 INFO app.ingestion.manager: Source Deutsche Welle (EN): ingested 0 new articles
+2026-10-27 09:34:01,737 INFO app.ingestion.manager: Source La Bandera: ingested 0 new articles
+2026-10-27 09:34:01,752 INFO app.ingestion.manager: Source BBC World: ingested 0 new articles
+2026-10-27 09:34:01,756 WARNING app.translation.translator: Translation: 0 items translated, 1 skipped (provider unavailable/rate-limited)
+2026-10-27 09:34:01,756 INFO app.scheduler.tasks: Processing task completed
+2026-10-27 09:34:01,756 INFO apscheduler.executors.default: Job "News Processing (trigger: interval[0:05:00], next run at: 2026-10-27 09:38:59 CET)" executed successfully
+2026-10-27 09:34:01,784 INFO app.ingestion.manager: Source La Vanguardia: ingested 2 new articles
+2026-10-27 09:34:02,110 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://www.20minutos.es/rss/
+2026-10-27 09:34:02,131 INFO app.ingestion.rss_fetcher: Fetched 10 articles from https://gaceta.es/feed/
+2026-10-27 09:34:02,144 INFO app.ingestion.rss_fetcher: Fetched 22 articles from https://www.rfi.fr/en/rss
+2026-10-27 09:34:02,154 INFO app.ingestion.manager: Source El Confidencial: ingested 1 new articles
+2026-10-27 09:34:02,163 INFO app.ingestion.manager: Source La Gaceta: ingested 0 new articles
+2026-10-27 09:34:02,182 INFO app.ingestion.manager: Source 20 Minutos: ingested 0 new articles
+2026-10-27 09:34:02,193 INFO app.ingestion.rss_fetcher: Fetched 10 articles from https://feeds.npr.org/1001/rss.xml
+2026-10-27 09:34:02,199 INFO app.ingestion.manager: Source NPR News: ingested 0 new articles
+2026-10-27 09:34:02,212 INFO app.ingestion.manager: Source RFI English: ingested 1 new articles
+2026-10-27 09:34:02,393 INFO app.ingestion.rss_fetcher: Fetched 10 articles from https://actualidad.rt.com/rss
+2026-10-27 09:34:02,399 INFO app.ingestion.manager: Source RT (ES): ingested 0 new articles
+2026-10-27 09:34:06,063 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://okdiario.com/feed/
+2026-10-27 09:34:06,147 INFO app.ingestion.manager: Source OKDIARIO: ingested 17 new articles
+2026-10-27 09:34:06,266 INFO app.ingestion.manager: Processed 32 news items
+2026-10-27 09:34:06,266 INFO app.scheduler.tasks: Ingestion cycle completed
+2026-10-27 09:34:06,266 INFO apscheduler.executors.default: Job "RSS Ingestion (trigger: interval[0:15:00], next run at: 2026-10-27 09:48:59 CET)" executed successfully
+INFO:     127.0.0.1:57912 - "GET /api/news?category=historia&relevance=relevant&sort_by=relevance&page=2&page_size=20 HTTP/1.1" 200 OK
+2026-10-27 09:38:59,977 INFO apscheduler.executors.default: Running job "News Processing (trigger: interval[0:05:00], next run at: 2026-10-27 09:43:59 CET)" (scheduled at 2026-10-27 09:38:59.977670+01:00)
+2026-10-27 09:38:59,978 INFO app.scheduler.tasks: Starting processing task
+2026-10-27 09:38:59,983 INFO app.processing.deduplication: Deduplication: marked 0 duplicates out of 0 items
+2026-10-27 09:39:01,200 INFO app.processing.grouping: Grouping completed for window of 24h
+2026-10-27 09:39:04,401 WARNING app.translation.translator: Translation: 1 items translated, 1 skipped (provider unavailable/rate-limited)
+2026-10-27 09:39:04,402 INFO app.scheduler.tasks: Processing task completed
+2026-10-27 09:39:04,402 INFO apscheduler.executors.default: Job "News Processing (trigger: interval[0:05:00], next run at: 2026-10-27 09:43:59 CET)" executed successfully
+INFO:     127.0.0.1:40088 - "GET /api/news?category=historia&relevance=relevant&sort_by=relevance&page=2&page_size=20 HTTP/1.1" 200 OK

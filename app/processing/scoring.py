@@ -42,10 +42,14 @@ GEO_WEIGHTS = {
 }
 
 
-def score_news(news: News, category_slugs: list = None):
+def score_news(news: News, category_slugs: list = None, primary_category: str = None):
     """Compute a relevance score [0..1] and set relevance_level.
 
-    Design:
+    When primary_category == 'historia' (or category_slugs[0] == 'historia'),
+    delegates to historia_scorer.score_historia_article() which applies a
+    personalized scoring profile. All other categories use the standard formula.
+
+    Standard design:
     - base 0.5 (neutral starting point)
     - recency bonus up to +0.2
     - keyword bonus: tier-1 (rare events) +0.08/hit max 0.2; tier-2 (common) +0.03/hit max 0.09
@@ -53,6 +57,18 @@ def score_news(news: News, category_slugs: list = None):
     - source reliability acts as a ±20% soft adjustment, not a full multiplier,
       so lower-reliability sources aren't unfairly suppressed
     """
+    # Determine primary category if not provided
+    if primary_category is None and category_slugs:
+        primary_category = category_slugs[0]
+    if primary_category is None and news.categories:
+        primary_category = news.categories[0].slug
+
+    # Personalized scoring for Historia
+    if primary_category == "historia":
+        from app.processing.historia_scorer import score_historia_article
+        score_historia_article(news)
+        return
+
     score = 0.5
 
     # Recency bonus (max 0.2)

@@ -145,7 +145,7 @@ async def process_pending_news():
                     if news.source else None
                 )
                 cat_slugs = await categorize_news(news, session, source_primary_category=source_primary)
-                score_news(news, category_slugs=cat_slugs)
+                score_news(news, category_slugs=cat_slugs, primary_category=source_primary)
                 news.processing_status = "processed"
                 from datetime import datetime, timezone
                 news.processed_at = datetime.now(tz=timezone.utc)
