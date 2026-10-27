@@ -1,11 +1,11 @@
 # 📰 feed-news
 
-Agregador personal de noticias con relevancia configurable y perfil histórico propio.
+Agregador personal de noticias con relevancia configurable, perfil histórico y perfil de catolicismo propios.
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![FastAPI](https://img.shields.io/badge/API-FastAPI-009688)
-![Tests](https://img.shields.io/badge/tests-202%20passing-brightgreen)
-![Fuentes](https://img.shields.io/badge/fuentes-25%20activas-blueviolet)
+![Tests](https://img.shields.io/badge/tests-218%20passing-brightgreen)
+![Fuentes](https://img.shields.io/badge/fuentes-37%20activas-blueviolet)
 
 ---
 
@@ -16,77 +16,93 @@ Agregador personal de noticias con relevancia configurable y perfil histórico p
 3. [Categorías temáticas](#3-categorías-temáticas)
 4. [Sistema de relevancia](#4-sistema-de-relevancia)
 5. [Perfil de Historia](#5-perfil-de-historia)
-6. [Configuración](#6-configuración)
-7. [Instalación](#7-instalación)
-8. [API](#8-api)
+6. [Perfil de Catolicismo](#6-perfil-de-catolicismo-y-tradicionalismo)
+7. [Configuración](#7-configuración)
+8. [Instalación](#8-instalación)
+9. [API](#9-api)
 
 ---
 
 ## 1. Fuentes de noticias
 
-25 fuentes activas agrupadas por ámbito geográfico. La columna `fiabilidad` pondera las puntuaciones de relevancia mediante un ajuste suave de ±20% — no suprime ninguna fuente.
+37 fuentes activas agrupadas por ámbito geográfico. La columna `fiabilidad` pondera las puntuaciones de relevancia mediante un ajuste suave de ±20% — no suprime ninguna fuente.
 
 ### España
 
 | Fuente | Línea editorial | Fiabilidad | Estado |
 |---|---|---|---|
-| El País | centroizquierda | 0.85 | ✅ activa |
+| El País | centroizquierda | 0.90 | ✅ activa |
 | 20 Minutos | centroizquierda | 0.70 | ✅ activa |
 | La Vanguardia | centro | 0.85 | ✅ activa |
 | El Confidencial | centro | 0.80 | ✅ activa |
-| El Mundo | centroderecha | 0.80 | ✅ activa |
+| El Mundo | centroderecha | 0.85 | ✅ activa |
 | El Español | centroderecha | 0.75 | ✅ activa |
 | ABC España | centroderecha | 0.80 | ✅ activa |
 | The Objective | centroderecha | 0.75 | ✅ activa |
-| OKDIARIO | derecha | 0.55 | ✅ activa |
-| La Bandera | derecha | 0.60 | ✅ activa |
-| La Gaceta | derecha | 0.55 | ✅ activa |
+| La Bandera | derecha | 0.65 | ✅ activa |
+| OKDIARIO | derecha | 0.60 | ✅ activa |
+| La Gaceta | derecha | 0.60 | ✅ activa |
 | El Diario | izquierda | 0.55 | ❌ desactivada |
 
 ### Europa
 
 | Fuente | Idioma | Línea editorial | Fiabilidad |
 |---|---|---|---|
-| BBC Europe | EN | centro | 0.92 |
-| POLITICO Europe | EN | centroderecha | 0.85 |
-| Euronews (ES) | ES | centro | 0.80 |
-| Euronews (EN) | EN | centro | 0.80 |
-| Deutsche Welle (EN) | EN | centro | 0.88 |
+| BBC Europe | EN | centro | 0.95 |
+| POLITICO Europe | EN | centroderecha | 0.90 |
+| Deutsche Welle (EN) | EN | centro | 0.90 |
+| Euronews (ES) | ES | centro | 0.85 |
+| Euronews (EN) | EN | centro | 0.85 |
+| RFI English | EN | centro | 0.85 |
 | Le Monde Diplomatique (ES) | ES | izquierda | 0.85 |
 
 ### Internacional
 
 | Fuente | Idioma | Línea editorial | Fiabilidad |
 |---|---|---|---|
-| BBC World | EN | centro | 0.92 |
-| The Guardian World | EN | centroizquierda | 0.88 |
+| BBC World | EN | centro | 0.95 |
+| The Guardian World | EN | centroizquierda | 0.90 |
+| Deutsche Welle World | EN | centro | 0.90 |
 | France 24 (EN) | EN | centro | 0.85 |
-| Deutsche Welle World | EN | centro | 0.88 |
-| NPR News | EN | centroizquierda | 0.85 |
-| Al Jazeera | EN | no determinado | 0.75 |
+| NPR News | EN | centroizquierda | 0.88 |
+| Al Jazeera | EN | no determinado | 0.80 |
 | RT (ES) | ES | proruso | 0.45 |
 
 ### Historia (fuentes académicas)
 
-| Fuente | Institución | Tipo | Fetch |
+| Fuente | Institución | Tipo | Fiabilidad | Fetch |
+|---|---|---|---|---|
+| El Reto Histórico | — | divulgación | 0.75 | 120 min |
+| Muy Interesante Historia | — | divulgación | 0.80 | 120 min |
+| Hispania Sacra | CSIC | académica | 0.90 | 1440 min |
+| Hispania | CSIC | académica | 0.90 | 1440 min |
+| En la España Medieval | UCM | académica | 0.90 | 1440 min |
+
+### Catolicismo y Tradicionalismo
+
+| Fuente | Orientación | Fiabilidad | Fetch |
 |---|---|---|---|
-| El Reto Histórico | — | divulgación | 60 min |
-| Muy Interesante Historia | — | divulgación | 1440 min |
-| Hispania Sacra | CSIC | académica | 1440 min |
-| Hispania | CSIC | académica | 1440 min |
-| En la España Medieval | UCM | académica | 1440 min |
+| Conferencia Episcopal Española | episcopal oficial | 0.85 | 120 min |
+| Vatican News (ES) | vaticano oficial | 0.85 | 30 min |
+| InfoVaticana | catolicismo tradicional | 0.75 | 60 min |
+| Adelante la Fe | catolicismo tradicional | 0.70 | 120 min |
+| FSSPX.News (ES) | FSSPX | 0.70 | 120 min |
+| Periódico La Esperanza | catolicismo tradicional | 0.65 | 120 min |
+| Un Tradi en el Novus Ordo | catolicismo tradicional | 0.65 | 120 min |
 
 ---
 
 ## 2. Distribución editorial
 
-| Posición | Peso en feed España |
+Fuentes de España (excluida El Diario):
+
+| Posición | Peso en feed |
 |---|---|
-| Centroderecha | 31 % |
-| Centro | 22 % |
-| Centroizquierda | 19 % |
-| Derecha | 17 % |
-| Izquierda | 11 % |
+| Centroderecha | ~36 % |
+| Centro | ~18 % |
+| Centroizquierda | ~18 % |
+| Derecha | ~18 % |
+| Izquierda | ~9 % |
 
 **HHI ≈ 0.21** — concentración moderada (baja < 0.15 · moderada 0.15–0.25 · alta > 0.25).
 
@@ -94,9 +110,9 @@ Agregador personal de noticias con relevancia configurable y perfil histórico p
 
 ## 3. Categorías temáticas
 
-Cada artículo recibe hasta 3 categorías mediante coincidencia de palabras clave con límites de palabra. Las fuentes con categoría primaria forzada (como Historia) exigen el **doble del umbral** en categorías secundarias para evitar falsos positivos.
+Cada artículo recibe hasta 3 categorías mediante coincidencia de palabras clave con límites de palabra. Las fuentes con categoría primaria forzada (Historia, Catolicismo) exigen el **doble del umbral** en categorías secundarias para evitar falsos positivos.
 
-`⚔️ Defensa` `🌍 Geopolítica` `🏛️ Política` `📈 Economía` `🔬 Ciencia` `💻 Tecnología` `🔋 Energía` `🏥 Salud` `🌿 Medioambiente` `🛡️ Seguridad` `⚖️ Sociedad` `🚨 Sucesos` `📜 Historia`
+`⚔️ Defensa` `🌍 Geopolítica` `🏛️ Política` `📈 Economía` `🔬 Ciencia` `💻 Tecnología` `🔋 Energía` `🏥 Salud` `🌿 Medioambiente` `🛡️ Seguridad` `⚖️ Sociedad` `🚨 Sucesos` `📜 Historia` `✝️ Catolicismo`
 
 ### Multiplicadores de categoría
 
@@ -114,7 +130,7 @@ Cada artículo recibe hasta 3 categorías mediante coincidencia de palabras clav
 
 ## 4. Sistema de relevancia
 
-Todos los artículos reciben `relevance_score ∈ [0, 1]`. **Historia usa su propio algoritmo** (ver §5). El resto comparte esta fórmula:
+Todos los artículos reciben `relevance_score ∈ [0, 1]`. Historia y Catolicismo usan sus propios algoritmos (§5 y §6). El resto comparte:
 
 ```
 puntuación = 0.5 (base)
@@ -180,7 +196,7 @@ Historia de España e Hispanidad — artículos dedicados a estos temas puntúan
 | Relevante | 68 |
 | Seguimiento | 27 |
 
-> **Destacados actuales:** mudéjares del Reino de Castilla (0.765) · lazos diplomáticos en la Corona de Castilla (0.765) · diplomacia de la Corona de Aragón / Guerra de los Dos Pedros (0.737) · provisiones episcopales de Orihuela (0.707)
+> **Destacados:** mudéjares del Reino de Castilla (0.765) · lazos diplomáticos en la Corona de Castilla (0.765) · diplomacia de la Corona de Aragón / Guerra de los Dos Pedros (0.737) · provisiones episcopales de Orihuela (0.707)
 
 Para ajustar las preferencias edita `app/processing/historia_profile.py` (solo datos, sin lógica) y recalcula:
 
@@ -190,7 +206,51 @@ python -m app.maintenance rescore_historia
 
 ---
 
-## 6. Configuración
+## 6. Perfil de Catolicismo y Tradicionalismo
+
+Los artículos de catolicismo usan el mismo algoritmo de cuatro dimensiones que Historia, con keywords centrados en liturgia, doctrina y espiritualidad tradicional.
+
+### Fórmula
+
+```
+puntuación = 0.40 × afinidad_temática
+           + 0.25 × profundidad_doctrinal
+           + 0.20 × contexto_eclesial
+           + 0.15 × calidad_de_fuente
+           + recencia (máx +0.05)
+
+Destacada  ≥ 0.72
+Relevante  ≥ 0.48
+Seguimiento < 0.48
+```
+
+### Temas de máxima prioridad *(afinidad alta)*
+
+Liturgia tradicional, tomismo y doctrina — artículos dedicados a estos temas puntúan hasta 0.85 en afinidad temática.
+
+`misa tradicional` `forma extraordinaria` `rito tridentino` `motu proprio` `summorum pontificum` `traditionis custodes` `tomismo` `santo tomás de aquino` `escolástica` `catecismo de la iglesia` `canto gregoriano` `música sacra` `tradición católica` `magisterio de la iglesia` `dogma católico` `fraternidad san pío x` `fsspx` `adoración eucarística`
+
+### Temas de gran interés *(afinidad media)*
+
+`papa` `vaticano` `santa sede` `canonización` `beatificación` `historia de la iglesia` `concilio` `jesuitas` `dominicos` `benedictinos` `teología` `pastoral` `inquisición` `carlismo` `sedevacantismo` `liturgia` `conferencia episcopal`
+
+### Indicadores de calidad
+
+| Dimensión | Señales positivas | Señales negativas |
+|---|---|---|
+| **Profundidad** | `encíclica` · `padres de la iglesia` · `análisis teológico` · `patrística` · Resumen >400 chars | `top 10` · `curiosidades` · `viral` · `alucinante` |
+| **Contexto eclesial** | `magisterio` · `sucesión apostólica` · `dogma de fe` · `concilio de trento` | — |
+| **Calidad** | Alta fiabilidad · `teólogo` · `doctor de la iglesia` | Baja fiabilidad |
+
+Para ajustar las preferencias edita `app/processing/catolicismo_profile.py` (solo datos, sin lógica) y recalcula:
+
+```bash
+python -m app.maintenance rescore_catolicismo
+```
+
+---
+
+## 7. Configuración
 
 ### Variables de entorno (`.env`)
 
@@ -211,13 +271,15 @@ Edita `app/seeds.py` y añade `"enabled": False` para desactivar una fuente. El 
 ### Mantenimiento
 
 ```bash
-python -m app.maintenance reclassify_historia   # recategorizar artículos históricos
-python -m app.maintenance rescore_historia       # recalcular puntuaciones de historia
+python -m app.maintenance reclassify_historia      # recategorizar artículos históricos
+python -m app.maintenance rescore_historia         # recalcular puntuaciones de historia
+python -m app.maintenance reclassify_catolicismo   # recategorizar artículos de catolicismo
+python -m app.maintenance rescore_catolicismo      # recalcular puntuaciones de catolicismo
 ```
 
 ---
 
-## 7. Instalación
+## 8. Instalación
 
 ```bash
 # 1. Entorno virtual
@@ -239,13 +301,14 @@ La base de datos se inicializa y las fuentes se cargan en el primer arranque. Ac
 ### Tests
 
 ```bash
-pytest tests/ -q                              # suite completa (202 tests)
-pytest tests/test_historia_scoring.py -v      # perfil de historia (15 tests)
+pytest tests/ -q                                  # suite completa (218 tests)
+pytest tests/test_historia_scoring.py -v          # perfil de historia (15 tests)
+pytest tests/test_catolicismo_scoring.py -v       # perfil de catolicismo (16 tests)
 ```
 
 ---
 
-## 8. API
+## 9. API
 
 | Endpoint | Descripción |
 |---|---|
@@ -269,3 +332,4 @@ pytest tests/test_historia_scoring.py -v      # perfil de historia (15 tests)
 - **SQLite**: adecuado para uso personal. Para múltiples usuarios concurrentes, usar PostgreSQL (`DATABASE_URL=postgresql+asyncpg://...` + `pip install asyncpg`).
 - **Traducción**: los artículos en inglés se muestran en su idioma original hasta que se configura un proveedor.
 - **RT (ES)**: incluida con fiabilidad reducida (0.45) como fuente de contraste editorial.
+- **InfoCatólica / Apostolado San Vicente Ferrer**: sin feed RSS verificado — no incorporadas.

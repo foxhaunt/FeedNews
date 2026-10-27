@@ -131,7 +131,7 @@ async def process_pending_news():
     async with AsyncSessionLocal() as session:
         result = await session.execute(
             select(News)
-            .options(selectinload(News.source))
+            .options(selectinload(News.source), selectinload(News.categories))
             .where(News.processing_status == "raw")
             .where(News.is_duplicate == False)
             .limit(200)

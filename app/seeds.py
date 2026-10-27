@@ -5,17 +5,18 @@ from app.database import AsyncSessionLocal, init_db
 from app.models import Source, Category
 
 CATEGORIES = [
-    {"slug": "historia", "name_es": "Historia", "name_en": "History", "icon": "📜", "order": 0},
-    {"slug": "politica", "name_es": "Política", "name_en": "Politics", "icon": "🏛️", "order": 1},
-    {"slug": "economia", "name_es": "Economía y mercados", "name_en": "Economy & Markets", "icon": "📈", "order": 2},
-    {"slug": "geopolitica", "name_es": "Geopolítica", "name_en": "Geopolitics", "icon": "🌍", "order": 3},
-    {"slug": "defensa", "name_es": "Defensa y conflictos", "name_en": "Defense & Conflicts", "icon": "⚔️", "order": 4},
-    {"slug": "seguridad", "name_es": "Seguridad", "name_en": "Security", "icon": "🔒", "order": 5},
-    {"slug": "tecnologia", "name_es": "Tecnología e IA", "name_en": "Technology & AI", "icon": "💻", "order": 6},
-    {"slug": "ciencia", "name_es": "Ciencia y salud", "name_en": "Science & Health", "icon": "🔬", "order": 7},
-    {"slug": "sociedad", "name_es": "Sociedad y tribunales", "name_en": "Society & Courts", "icon": "⚖️", "order": 8},
-    {"slug": "energia", "name_es": "Energía y medioambiente", "name_en": "Energy & Environment", "icon": "🌱", "order": 9},
-    {"slug": "sucesos", "name_es": "Sucesos y emergencias", "name_en": "Incidents & Emergencies", "icon": "🚨", "order": 10},
+    {"slug": "historia",    "name_es": "Historia",                "name_en": "History",               "icon": "📜", "order": 0},
+    {"slug": "catolicismo", "name_es": "Catolicismo y Tradición", "name_en": "Catholicism & Tradition", "icon": "✝️", "order": 1},
+    {"slug": "politica",    "name_es": "Política",                "name_en": "Politics",               "icon": "🏛️", "order": 2},
+    {"slug": "economia",    "name_es": "Economía y mercados",     "name_en": "Economy & Markets",      "icon": "📈", "order": 3},
+    {"slug": "geopolitica", "name_es": "Geopolítica",             "name_en": "Geopolitics",            "icon": "🌍", "order": 4},
+    {"slug": "defensa",     "name_es": "Defensa y conflictos",    "name_en": "Defense & Conflicts",    "icon": "⚔️", "order": 5},
+    {"slug": "seguridad",   "name_es": "Seguridad",               "name_en": "Security",               "icon": "🔒", "order": 6},
+    {"slug": "tecnologia",  "name_es": "Tecnología e IA",         "name_en": "Technology & AI",        "icon": "💻", "order": 7},
+    {"slug": "ciencia",     "name_es": "Ciencia y salud",         "name_en": "Science & Health",       "icon": "🔬", "order": 8},
+    {"slug": "sociedad",    "name_es": "Sociedad y tribunales",   "name_en": "Society & Courts",       "icon": "⚖️", "order": 9},
+    {"slug": "energia",     "name_es": "Energía y medioambiente", "name_en": "Energy & Environment",   "icon": "🌱", "order": 10},
+    {"slug": "sucesos",     "name_es": "Sucesos y emergencias",   "name_en": "Incidents & Emergencies","icon": "🚨", "order": 11},
 ]
 
 SOURCES = [
@@ -274,6 +275,56 @@ SOURCES = [
         "feed_type": "rss", "geographic_scope": "spain", "language": "es",
         "reliability_score": 0.9, "fetch_interval_minutes": 1440,
         "extra_config": {"primary_category": "historia", "editorial": "academico"},
+    },
+    # ── Catolicismo y Tradicionalismo ────────────────────────────────────────
+    {
+        "name": "InfoVaticana",
+        "url": "https://infovaticana.com/feed/",
+        "feed_type": "rss", "geographic_scope": "spain", "language": "es",
+        "reliability_score": 0.75, "fetch_interval_minutes": 60,
+        "extra_config": {"primary_category": "catolicismo", "editorial": "catolicismo_tradicional"},
+    },
+    {
+        "name": "Adelante la Fe",
+        "url": "https://adelantelafe.com/feed/",
+        "feed_type": "rss", "geographic_scope": "spain", "language": "es",
+        "reliability_score": 0.70, "fetch_interval_minutes": 120,
+        "extra_config": {"primary_category": "catolicismo", "editorial": "catolicismo_tradicional"},
+    },
+    {
+        "name": "Periódico La Esperanza",
+        "url": "https://periodicolaesperanza.com/feed/",
+        "feed_type": "rss", "geographic_scope": "spain", "language": "es",
+        "reliability_score": 0.65, "fetch_interval_minutes": 120,
+        "extra_config": {"primary_category": "catolicismo", "editorial": "catolicismo_tradicional"},
+    },
+    {
+        "name": "Un Tradi en el Novus Ordo",
+        "url": "https://untradi.com/rss.xml",
+        "feed_type": "rss", "geographic_scope": "spain", "language": "es",
+        "reliability_score": 0.65, "fetch_interval_minutes": 120,
+        "extra_config": {"primary_category": "catolicismo", "editorial": "catolicismo_tradicional"},
+    },
+    {
+        "name": "FSSPX.News (ES)",
+        "url": "https://fsspx.news/es/news/rss",
+        "feed_type": "rss", "geographic_scope": "international", "language": "es",
+        "reliability_score": 0.70, "fetch_interval_minutes": 120,
+        "extra_config": {"primary_category": "catolicismo", "editorial": "catolicismo_tradicional"},
+    },
+    {
+        "name": "Vatican News (ES)",
+        "url": "https://www.vaticannews.va/es.rss.xml",
+        "feed_type": "rss", "geographic_scope": "international", "language": "es",
+        "reliability_score": 0.85, "fetch_interval_minutes": 30,
+        "extra_config": {"primary_category": "catolicismo", "editorial": "vaticano_oficial"},
+    },
+    {
+        "name": "Conferencia Episcopal Española",
+        "url": "https://www.conferenciaepiscopal.es/feed/",
+        "feed_type": "rss", "geographic_scope": "spain", "language": "es",
+        "reliability_score": 0.85, "fetch_interval_minutes": 120,
+        "extra_config": {"primary_category": "catolicismo", "editorial": "episcopal_oficial"},
     },
 ]
 

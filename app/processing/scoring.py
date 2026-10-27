@@ -60,13 +60,17 @@ def score_news(news: News, category_slugs: list = None, primary_category: str = 
     # Determine primary category if not provided
     if primary_category is None and category_slugs:
         primary_category = category_slugs[0]
-    if primary_category is None and news.categories:
-        primary_category = news.categories[0].slug
 
     # Personalized scoring for Historia
     if primary_category == "historia":
         from app.processing.historia_scorer import score_historia_article
         score_historia_article(news)
+        return
+
+    # Personalized scoring for Catolicismo
+    if primary_category == "catolicismo":
+        from app.processing.catolicismo_scorer import score_catolicismo_article
+        score_catolicismo_article(news)
         return
 
     score = 0.5
@@ -95,7 +99,7 @@ def score_news(news: News, category_slugs: list = None, primary_category: str = 
 
     # Category multiplier
     if category_slugs is None:
-        category_slugs = [c.slug for c in (news.categories or [])]
+        category_slugs = []
     cat_mult = max((CATEGORY_WEIGHTS.get(s, 1.0) for s in category_slugs), default=1.0)
     score *= cat_mult
 

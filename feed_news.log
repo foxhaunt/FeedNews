@@ -1,110 +1,307 @@
-INFO:     Started server process [4090005]
+INFO:     Started server process [37160]
 INFO:     Waiting for application startup.
-2026-10-27 09:45:14,421 INFO app.main: Starting Feed News v1.0.0
-2026-10-27 09:45:14,474 WARNING tzlocal: /etc/timezone is deprecated in some distros, and no longer reliable. tzlocal is ignoring it, and you can likely delete it.
-2026-10-27 09:45:14,474 INFO apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2026-10-27 09:45:14,474 INFO apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2026-10-27 09:45:14,474 INFO apscheduler.scheduler: Added job "RSS Ingestion" to job store "default"
-2026-10-27 09:45:14,474 INFO apscheduler.scheduler: Added job "News Processing" to job store "default"
-2026-10-27 09:45:14,474 INFO apscheduler.scheduler: Scheduler started
-2026-10-27 09:45:14,474 INFO app.scheduler.tasks: Scheduler started (ingestion every 15m, processing every 5m)
-2026-10-27 09:45:14,594 INFO app.scheduler.tasks: Starting scheduled ingestion cycle
-2026-10-27 09:45:14,596 INFO app.scheduler.tasks: Starting processing task
+2026-10-27 16:38:32,428 INFO app.main: Starting Feed News v1.0.0
+2026-10-27 16:38:32,480 WARNING tzlocal: /etc/timezone is deprecated in some distros, and no longer reliable. tzlocal is ignoring it, and you can likely delete it.
+2026-10-27 16:38:32,480 INFO apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-10-27 16:38:32,480 INFO apscheduler.scheduler: Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-10-27 16:38:32,480 INFO apscheduler.scheduler: Added job "RSS Ingestion" to job store "default"
+2026-10-27 16:38:32,480 INFO apscheduler.scheduler: Added job "News Processing" to job store "default"
+2026-10-27 16:38:32,480 INFO apscheduler.scheduler: Scheduler started
+2026-10-27 16:38:32,480 INFO app.scheduler.tasks: Scheduler started (ingestion every 15m, processing every 5m)
+2026-10-27 16:38:32,600 INFO app.scheduler.tasks: Starting scheduled ingestion cycle
+2026-10-27 16:38:32,602 INFO app.scheduler.tasks: Starting processing task
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8765 (Press CTRL+C to quit)
-2026-10-27 09:45:14,598 INFO app.ingestion.manager: Running ingestion for 9 sources
-2026-10-27 09:45:14,628 INFO app.processing.deduplication: Deduplication: marked 0 duplicates out of 0 items
-2026-10-27 09:45:15,771 INFO app.processing.grouping: Grouping completed for window of 24h
-2026-10-27 09:45:15,917 INFO app.ingestion.rss_fetcher: Fetched 45 articles from https://www.theguardian.com/world/rss
-2026-10-27 09:45:15,930 INFO app.ingestion.rss_fetcher: Fetched 25 articles from https://www.aljazeera.com/xml/rss/all.xml
-2026-10-27 09:45:15,940 INFO app.ingestion.rss_fetcher: Fetched 24 articles from https://www.france24.com/en/rss
-2026-10-27 09:45:15,947 INFO app.ingestion.rss_fetcher: Fetched 21 articles from https://feeds.bbci.co.uk/news/world/europe/rss.xml
-2026-10-27 09:45:15,965 INFO app.ingestion.manager: Source The Guardian World: ingested 0 new articles
-2026-10-27 09:45:16,361 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada
-2026-10-27 09:45:16,382 INFO app.ingestion.rss_fetcher: Fetched 26 articles from https://e00-elmundo.uecdn.es/elmundo/rss/portada.xml
-2026-10-27 09:45:16,422 INFO app.ingestion.rss_fetcher: Fetched 10 articles from https://www.politico.eu/rss
-2026-10-27 09:45:16,437 WARNING app.translation.translator: Translation: 0 items translated, 1 skipped (provider unavailable/rate-limited)
-2026-10-27 09:45:16,437 INFO app.scheduler.tasks: Processing task completed
-2026-10-27 09:45:16,439 INFO app.ingestion.manager: Source Al Jazeera: ingested 3 new articles
-2026-10-27 09:45:16,450 INFO app.ingestion.manager: Source El Mundo: ingested 0 new articles
-2026-10-27 09:45:16,482 INFO app.ingestion.manager: Source El País: ingested 3 new articles
-2026-10-27 09:45:16,503 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://feeds.feedburner.com/euronews/en/news/
-2026-10-27 09:45:16,518 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://feeds.feedburner.com/euronews/es/news/
-2026-10-27 09:45:16,525 INFO app.ingestion.manager: Source POLITICO Europe: ingested 0 new articles
-2026-10-27 09:45:16,546 INFO app.ingestion.manager: Source Euronews (EN): ingested 0 new articles
-2026-10-27 09:45:16,573 INFO app.ingestion.manager: Source Euronews (ES): ingested 0 new articles
-2026-10-27 09:45:16,587 INFO app.ingestion.manager: Source BBC Europe: ingested 0 new articles
-2026-10-27 09:45:16,693 INFO app.ingestion.manager: Source France 24 (EN): ingested 1 new articles
-2026-10-27 09:45:16,713 ERROR app.ingestion.manager: Error processing news 3718: (sqlalchemy.exc.MissingGreenlet) greenlet_spawn has not been called; can't call await_() here. Was IO attempted in an unexpected place?
-[SQL: SELECT categories.id, categories.slug, categories.name_es, categories.name_en, categories.icon, categories."order" 
-FROM categories, news_categories 
-WHERE ? = news_categories.news_id AND categories.id = news_categories.category_id]
-[parameters: [{'%(138667622043664 param)s': 3718}]]
-(Background on this error at: https://sqlalche.me/e/21/xd2s)
-/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:4611: RuntimeWarning: coroutine 'Connection.cursor' was never awaited
-  proc = new.union(dirty).difference(deleted)
-RuntimeWarning: Enable tracemalloc to get the object allocation traceback
-2026-10-27 09:45:16,717 ERROR app.ingestion.manager: Error processing news 3719: (sqlalchemy.exc.MissingGreenlet) greenlet_spawn has not been called; can't call await_() here. Was IO attempted in an unexpected place?
-[SQL: SELECT categories.id, categories.slug, categories.name_es, categories.name_en, categories.icon, categories."order" 
-FROM categories, news_categories 
-WHERE ? = news_categories.news_id AND categories.id = news_categories.category_id]
-[parameters: [{'%(138667622043664 param)s': 3719}]]
-(Background on this error at: https://sqlalche.me/e/21/xd2s)
-2026-10-27 09:45:16,719 ERROR app.ingestion.manager: Error processing news 3720: (sqlalchemy.exc.MissingGreenlet) greenlet_spawn has not been called; can't call await_() here. Was IO attempted in an unexpected place?
-[SQL: SELECT categories.id, categories.slug, categories.name_es, categories.name_en, categories.icon, categories."order" 
-FROM categories, news_categories 
-WHERE ? = news_categories.news_id AND categories.id = news_categories.category_id]
-[parameters: [{'%(138667622043664 param)s': 3720}]]
-(Background on this error at: https://sqlalche.me/e/21/xd2s)
-2026-10-27 09:45:16,722 ERROR app.ingestion.manager: Error processing news 3721: (sqlalchemy.exc.MissingGreenlet) greenlet_spawn has not been called; can't call await_() here. Was IO attempted in an unexpected place?
-[SQL: SELECT categories.id, categories.slug, categories.name_es, categories.name_en, categories.icon, categories."order" 
-FROM categories, news_categories 
-WHERE ? = news_categories.news_id AND categories.id = news_categories.category_id]
-[parameters: [{'%(138667622043664 param)s': 3721}]]
-(Background on this error at: https://sqlalche.me/e/21/xd2s)
-/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/util/concurrency.py:199: RuntimeWarning: coroutine 'Connection.cursor' was never awaited
-  result = context.switch(*args, **kwargs)
-RuntimeWarning: Enable tracemalloc to get the object allocation traceback
-2026-10-27 09:45:16,725 ERROR app.ingestion.manager: Error processing news 3722: (sqlalchemy.exc.MissingGreenlet) greenlet_spawn has not been called; can't call await_() here. Was IO attempted in an unexpected place?
-[SQL: SELECT categories.id, categories.slug, categories.name_es, categories.name_en, categories.icon, categories."order" 
-FROM categories, news_categories 
-WHERE ? = news_categories.news_id AND categories.id = news_categories.category_id]
-[parameters: [{'%(138667622043664 param)s': 3722}]]
-(Background on this error at: https://sqlalche.me/e/21/xd2s)
-2026-10-27 09:45:16,727 ERROR app.ingestion.manager: Error processing news 3723: (sqlalchemy.exc.MissingGreenlet) greenlet_spawn has not been called; can't call await_() here. Was IO attempted in an unexpected place?
-[SQL: SELECT categories.id, categories.slug, categories.name_es, categories.name_en, categories.icon, categories."order" 
-FROM categories, news_categories 
-WHERE ? = news_categories.news_id AND categories.id = news_categories.category_id]
-[parameters: [{'%(138667622043664 param)s': 3723}]]
-(Background on this error at: https://sqlalche.me/e/21/xd2s)
-2026-10-27 09:45:16,733 INFO app.ingestion.manager: Processed 7 news items
-2026-10-27 09:45:16,733 INFO app.scheduler.tasks: Ingestion cycle completed
-/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/pydantic/_internal/_config.py:140: RuntimeWarning: coroutine 'Connection.cursor' was never awaited
-  def __init__(self, config: ConfigDict | dict[str, Any] | type[Any] | None, *, check: bool = True):
-RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+2026-10-27 16:38:32,604 INFO app.ingestion.manager: Running ingestion for 25 sources
+2026-10-27 16:38:32,663 INFO app.processing.deduplication: Deduplication: marked 0 duplicates out of 3 items
+2026-10-27 16:38:33,849 INFO app.processing.grouping: Grouping completed for window of 24h
+2026-10-27 16:38:34,136 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada
+2026-10-27 16:38:34,180 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://rss.dw.com/rdf/rss-en-all
+2026-10-27 16:38:34,189 INFO app.ingestion.rss_fetcher: Fetched 23 articles from https://feeds.bbci.co.uk/news/world/europe/rss.xml
+2026-10-27 16:38:34,207 INFO app.ingestion.rss_fetcher: Fetched 10 articles from https://www.politico.eu/rss
+2026-10-27 16:38:34,461 INFO app.ingestion.rss_fetcher: Fetched 27 articles from https://e00-elmundo.uecdn.es/elmundo/rss/portada.xml
+2026-10-27 16:38:34,480 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://feeds.feedburner.com/euronews/en/news/
+2026-10-27 16:38:34,504 INFO app.ingestion.manager: Source El País: ingested 3 new articles
+2026-10-27 16:38:34,537 INFO app.ingestion.manager: Source Euronews (EN): ingested 2 new articles
+2026-10-27 16:38:34,545 INFO app.ingestion.manager: Source POLITICO Europe: ingested 1 new articles
+2026-10-27 16:38:34,556 INFO app.ingestion.manager: Source El Mundo: ingested 0 new articles
+2026-10-27 16:38:34,624 INFO app.ingestion.rss_fetcher: Fetched 24 articles from https://feeds.bbci.co.uk/news/world/rss.xml
+2026-10-27 16:38:34,899 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://www.20minutos.es/rss/
+2026-10-27 16:38:34,952 INFO app.ingestion.rss_fetcher: Fetched 45 articles from https://www.theguardian.com/world/rss
+2026-10-27 16:38:34,973 INFO app.ingestion.rss_fetcher: Fetched 30 articles from https://www.elespanol.com/rss/
+2026-10-27 16:38:35,024 INFO app.ingestion.rss_fetcher: Fetched 15 articles from https://rss.elconfidencial.com/espana/
+2026-10-27 16:38:35,034 INFO app.ingestion.rss_fetcher: Fetched 24 articles from https://www.france24.com/en/rss
+2026-10-27 16:38:35,043 INFO app.ingestion.manager: Source BBC Europe: ingested 0 new articles
+2026-10-27 16:38:35,052 INFO app.ingestion.manager: Source France 24 (EN): ingested 0 new articles
+2026-10-27 16:38:35,064 INFO app.ingestion.manager: Source El Confidencial: ingested 1 new articles
+2026-10-27 16:38:35,082 INFO app.ingestion.manager: Source El Español: ingested 2 new articles
+2026-10-27 16:38:35,177 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://www.lavanguardia.com/rss/home.xml
+2026-10-27 16:38:35,178 INFO app.ingestion.manager: Source 20 Minutos: ingested 0 new articles
+2026-10-27 16:38:35,204 INFO app.ingestion.manager: Source The Guardian World: ingested 2 new articles
+2026-10-27 16:38:35,244 INFO app.ingestion.manager: Source La Vanguardia: ingested 3 new articles
+2026-10-27 16:38:35,273 INFO app.ingestion.rss_fetcher: Fetched 20 articles from https://www.abc.es/rss/feeds/abc_EspanaEspana.xml
+2026-10-27 16:38:35,279 INFO app.ingestion.rss_fetcher: Fetched 11 articles from https://rss.dw.com/rdf/rss-en-world
+2026-10-27 16:38:35,288 INFO app.ingestion.rss_fetcher: Fetched 10 articles from https://labandera.es/feed/
+2026-10-27 16:38:35,359 INFO app.ingestion.rss_fetcher: Fetched 20 articles from https://theobjective.com/feed/
+2026-10-27 16:38:35,370 INFO app.ingestion.rss_fetcher: Fetched 25 articles from https://www.aljazeera.com/xml/rss/all.xml
+2026-10-27 16:38:35,383 INFO app.ingestion.manager: Source BBC World: ingested 1 new articles
+2026-10-27 16:38:35,394 INFO app.ingestion.manager: Source La Bandera: ingested 1 new articles
+2026-10-27 16:38:35,446 INFO app.ingestion.manager: Source ABC España: ingested 7 new articles
+2026-10-27 16:38:35,476 INFO app.ingestion.manager: Source Al Jazeera: ingested 6 new articles
+2026-10-27 16:38:35,516 INFO app.ingestion.rss_fetcher: Fetched 10 articles from https://gaceta.es/feed/
+2026-10-27 16:38:35,682 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://okdiario.com/feed/
+2026-10-27 16:38:35,711 INFO app.ingestion.manager: Source The Objective: ingested 10 new articles
+2026-10-27 16:38:35,722 INFO app.ingestion.manager: Source Deutsche Welle World (EN): ingested 0 new articles
+2026-10-27 16:38:35,752 INFO app.ingestion.manager: Source Deutsche Welle (EN): ingested 1 new articles
+2026-10-27 16:38:35,831 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://www.vaticannews.va/es.rss.xml
+2026-10-27 16:38:35,849 INFO app.ingestion.manager: Source OKDIARIO: ingested 10 new articles
+2026-10-27 16:38:35,880 INFO app.ingestion.manager: Source Vatican News (ES): ingested 4 new articles
+2026-10-27 16:38:35,964 INFO app.ingestion.manager: Source La Gaceta: ingested 4 new articles
+2026-10-27 16:38:36,005 INFO app.ingestion.rss_fetcher: Fetched 50 articles from https://feeds.feedburner.com/euronews/es/news/
+2026-10-27 16:38:36,021 INFO app.ingestion.manager: Source Euronews (ES): ingested 0 new articles
+2026-10-27 16:38:36,116 INFO app.ingestion.rss_fetcher: Fetched 22 articles from https://www.rfi.fr/en/rss
+2026-10-27 16:38:36,124 INFO app.ingestion.manager: Source RFI English: ingested 0 new articles
+2026-10-27 16:38:36,393 INFO app.ingestion.rss_fetcher: Fetched 10 articles from https://feeds.npr.org/1001/rss.xml
+2026-10-27 16:38:37,003 INFO app.ingestion.rss_fetcher: Fetched 10 articles from https://actualidad.rt.com/rss
 Seeding completed.
-INFO:     127.0.0.1:34348 - "GET / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:34348 - "GET /api/categories HTTP/1.1" 200 OK
-INFO:     127.0.0.1:34364 - "GET /api/news?sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:45002 - "GET /api/news?category=historia&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:40242 - "GET /api/news/featured?limit=20&category=historia HTTP/1.1" 200 OK
-INFO:     127.0.0.1:40242 - "GET /api/news?category=historia&relevance=relevant&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51116 - "GET /api/news?category=seguridad&relevance=relevant&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51132 - "GET /api/news?category=seguridad&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51132 - "GET /api/news?category=historia&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
-2026-10-27 09:50:14,474 INFO apscheduler.executors.default: Running job "News Processing (trigger: interval[0:05:00], next run at: 2026-10-27 09:55:14 CET)" (scheduled at 2026-10-27 09:50:14.474328+01:00)
-2026-10-27 09:50:14,474 INFO app.scheduler.tasks: Starting processing task
-2026-10-27 09:50:14,480 INFO app.processing.deduplication: Deduplication: marked 0 duplicates out of 0 items
-2026-10-27 09:50:15,646 INFO app.processing.grouping: Grouping completed for window of 24h
-INFO:     127.0.0.1:37632 - "GET /api/news?category=historia&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
-2026-10-27 09:50:22,543 WARNING app.translation.translator: Translation: 4 items translated, 1 skipped (provider unavailable/rate-limited)
-2026-10-27 09:50:22,543 INFO app.scheduler.tasks: Processing task completed
-2026-10-27 09:50:22,543 INFO apscheduler.executors.default: Job "News Processing (trigger: interval[0:05:00], next run at: 2026-10-27 09:55:14 CET)" executed successfully
-2026-10-27 09:55:14,474 INFO apscheduler.executors.default: Running job "News Processing (trigger: interval[0:05:00], next run at: 2026-10-27 10:00:14 CET)" (scheduled at 2026-10-27 09:55:14.474328+01:00)
-2026-10-27 09:55:14,474 INFO app.scheduler.tasks: Starting processing task
-2026-10-27 09:55:14,480 INFO app.processing.deduplication: Deduplication: marked 0 duplicates out of 0 items
-2026-10-27 09:55:15,669 INFO app.processing.grouping: Grouping completed for window of 24h
-2026-10-27 09:55:16,378 WARNING app.translation.translator: Translation: 0 items translated, 1 skipped (provider unavailable/rate-limited)
-2026-10-27 09:55:16,378 INFO app.scheduler.tasks: Processing task completed
-2026-10-27 09:55:16,378 INFO apscheduler.executors.default: Job "News Processing (trigger: interval[0:05:00], next run at: 2026-10-27 10:00:14 CET)" executed successfully
-INFO:     127.0.0.1:56418 - "GET /api/news?category=historia&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51786 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51786 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51790 - "GET /api/news?sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51790 - "GET /api/news?category=historia&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51790 - "GET /api/news?category=catolicismo&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+2026-10-27 16:38:57,039 ERROR app.ingestion.manager: Error processing news 4430: (sqlite3.OperationalError) database is locked
+[SQL: DELETE FROM news_categories WHERE news_categories.news_id = ?]
+[parameters: (4430,)]
+(Background on this error at: https://sqlalche.me/e/21/e3q8)
+2026-10-27 16:39:07,051 ERROR app.scheduler.tasks: Ingestion task failed: This Session's transaction has been rolled back due to a previous exception during flush. To begin a new transaction with this Session, first issue Session.rollback(). Original exception was: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(sqlite3.OperationalError) database is locked
+[SQL: UPDATE news SET processing_status=? WHERE news.id = ?]
+[parameters: ('error', 4430)]
+(Background on this error at: https://sqlalche.me/e/21/e3q8) (Background on this error at: https://sqlalche.me/e/21/7s2a)
+Traceback (most recent call last):
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1958, in _exec_single_context
+    self.dialect.do_execute(
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 1192, in do_execute
+    cursor.execute(statement, parameters)
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/connectors/asyncio.py", line 258, in execute
+    self._adapt_connection._handle_exception(error)
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/connectors/asyncio.py", line 412, in _handle_exception
+    self._handle_exception_no_connection(self.dbapi, error)
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/dialects/sqlite/aiosqlite.py", line 237, in _handle_exception_no_connection
+    super()._handle_exception_no_connection(dbapi, error)
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/connectors/asyncio.py", line 409, in _handle_exception_no_connection
+    raise error.with_traceback(exc_info[2])
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/connectors/asyncio.py", line 256, in execute
+    return await_(self._execute_async(operation, parameters))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/util/concurrency.py", line 167, in await_
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/util/concurrency.py", line 205, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/connectors/asyncio.py", line 279, in _execute_async
+    result = await self._cursor.execute(operation, parameters)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/aiosqlite/cursor.py", line 40, in execute
+    await self._execute(self._cursor.execute, sql, parameters)
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/aiosqlite/cursor.py", line 32, in _execute
+    return await self._conn._execute(fn, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/aiosqlite/core.py", line 160, in _execute
+    return await future
+           ^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/aiosqlite/core.py", line 63, in _connection_worker_thread
+    result = function()
+             ^^^^^^^^^^
+sqlite3.OperationalError: database is locked
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/master/Documentos/proyectos/feed_news/app/ingestion/manager.py", line 147, in process_pending_news
+    cat_slugs = await categorize_news(news, session, source_primary_category=source_primary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/app/processing/categorizer.py", line 441, in categorize_news
+    result = await session.execute(
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py", line 651, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/util/concurrency.py", line 212, in greenlet_spawn
+    result = context.switch(value)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2473, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2336, in _execute_internal
+    ) = compile_state_cls.orm_pre_session_exec(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/context.py", line 595, in orm_pre_session_exec
+    session._autoflush()
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 3200, in _autoflush
+    raise e.with_traceback(sys.exc_info()[2])
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 3189, in _autoflush
+    self.flush()
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4543, in flush
+    self._flush(objects)
+  File "<sqlalchemy generated warned() wrapper for sqlalchemy.orm.session.Session._flush>", line 2, in _flush
+    return target(fn, self, objects=objects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/util/deprecations.py", line 281, in warned
+    return fn(*args, **kwargs)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4686, in _flush
+    with util.safe_reraise():
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 166, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4647, in _flush
+    flush_context.execute()
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 467, in execute
+    rec.execute(self)
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 643, in execute
+    util.preloaded.orm_persistence._save_obj(
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 84, in _save_obj
+    _emit_update_statements(
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 916, in _emit_update_statements
+    c = connection.execute(
+        ^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1463, in execute
+    return meth(
+           ^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 533, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1683, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1837, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1977, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2347, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1958, in _exec_single_context
+    self.dialect.do_execute(
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 1192, in do_execute
+    cursor.execute(statement, parameters)
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/connectors/asyncio.py", line 258, in execute
+    self._adapt_connection._handle_exception(error)
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/connectors/asyncio.py", line 412, in _handle_exception
+    self._handle_exception_no_connection(self.dbapi, error)
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/dialects/sqlite/aiosqlite.py", line 237, in _handle_exception_no_connection
+    super()._handle_exception_no_connection(dbapi, error)
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/connectors/asyncio.py", line 409, in _handle_exception_no_connection
+    raise error.with_traceback(exc_info[2])
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/connectors/asyncio.py", line 256, in execute
+    return await_(self._execute_async(operation, parameters))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/util/concurrency.py", line 167, in await_
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/util/concurrency.py", line 205, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/connectors/asyncio.py", line 279, in _execute_async
+    result = await self._cursor.execute(operation, parameters)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/aiosqlite/cursor.py", line 40, in execute
+    await self._execute(self._cursor.execute, sql, parameters)
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/aiosqlite/cursor.py", line 32, in _execute
+    return await self._conn._execute(fn, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/aiosqlite/core.py", line 160, in _execute
+    return await future
+           ^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/aiosqlite/core.py", line 63, in _connection_worker_thread
+    result = function()
+             ^^^^^^^^^^
+sqlalchemy.exc.OperationalError: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(sqlite3.OperationalError) database is locked
+[SQL: UPDATE news SET processing_status=? WHERE news.id = ?]
+[parameters: ('error', 4430)]
+(Background on this error at: https://sqlalche.me/e/21/e3q8)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/master/Documentos/proyectos/feed_news/app/scheduler/tasks.py", line 17, in ingestion_task
+    await run_ingestion_cycle()
+  File "/home/master/Documentos/proyectos/feed_news/app/ingestion/manager.py", line 202, in run_ingestion_cycle
+    await process_pending_news()
+  File "/home/master/Documentos/proyectos/feed_news/app/ingestion/manager.py", line 154, in process_pending_news
+    logger.error("Error processing news %d: %s", news.id, e)
+                                                 ^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/attributes.py", line 575, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/attributes.py", line 1091, in get
+    value = self._fire_loader_callables(state, key, passive)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/attributes.py", line 1121, in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/state.py", line 833, in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/loading.py", line 1700, in _load_scalar_attributes
+    result = _load_on_ident(
+             ^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/loading.py", line 518, in _load_on_ident
+    return _load_on_pk_identity(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/loading.py", line 702, in _load_on_pk_identity
+    session.execute(
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2473, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2336, in _execute_internal
+    ) = compile_state_cls.orm_pre_session_exec(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/context.py", line 595, in orm_pre_session_exec
+    session._autoflush()
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 3189, in _autoflush
+    self.flush()
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4543, in flush
+    self._flush(objects)
+  File "<sqlalchemy generated warned() wrapper for sqlalchemy.orm.session.Session._flush>", line 2, in _flush
+    return target(fn, self, objects=objects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/util/deprecations.py", line 281, in warned
+    return fn(*args, **kwargs)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4643, in _flush
+    flush_context.transaction = transaction = self._autobegin_t()._begin()
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<sqlalchemy generated _go() wrapper for sqlalchemy.orm.session.SessionTransaction._begin>", line 2, in _begin
+    return target(fn, self, nested=nested)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/state_changes.py", line 101, in _go
+    self._raise_for_prerequisite_state(fn.__name__, current_state)
+  File "/home/master/Documentos/proyectos/feed_news/venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 987, in _raise_for_prerequisite_state
+    raise sa_exc.PendingRollbackError(
+sqlalchemy.exc.PendingRollbackError: This Session's transaction has been rolled back due to a previous exception during flush. To begin a new transaction with this Session, first issue Session.rollback(). Original exception was: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(sqlite3.OperationalError) database is locked
+[SQL: UPDATE news SET processing_status=? WHERE news.id = ?]
+[parameters: ('error', 4430)]
+(Background on this error at: https://sqlalche.me/e/21/e3q8) (Background on this error at: https://sqlalche.me/e/21/7s2a)
+2026-10-27 16:39:12,925 WARNING app.translation.translator: Translation: 23 items translated, 3 skipped (provider unavailable/rate-limited)
+2026-10-27 16:39:12,925 INFO app.scheduler.tasks: Processing task completed
+INFO:     127.0.0.1:38096 - "GET /api/news/4072 HTTP/1.1" 200 OK
+2026-10-27 16:43:32,480 INFO apscheduler.executors.default: Running job "News Processing (trigger: interval[0:05:00], next run at: 2026-10-27 16:48:32 CET)" (scheduled at 2026-10-27 16:43:32.480219+01:00)
+2026-10-27 16:43:32,480 INFO app.scheduler.tasks: Starting processing task
+2026-10-27 16:43:32,902 INFO app.processing.deduplication: Deduplication: marked 0 duplicates out of 61 items
+2026-10-27 16:43:34,100 INFO app.processing.grouping: Grouping completed for window of 24h
+INFO:     127.0.0.1:56248 - "GET /api/news/4420 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56248 - "GET /api/news?category=catolicismo&sort_by=relevance&page=2&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56248 - "GET /api/news?category=catolicismo&relevance=follow&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56248 - "GET /api/news?category=catolicismo&relevance=follow&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+2026-10-27 16:44:02,936 WARNING app.translation.translator: Translation: 13 items translated, 3 skipped (provider unavailable/rate-limited)
+2026-10-27 16:44:02,936 INFO app.scheduler.tasks: Processing task completed
+2026-10-27 16:44:02,936 INFO apscheduler.executors.default: Job "News Processing (trigger: interval[0:05:00], next run at: 2026-10-27 16:48:32 CET)" executed successfully
+INFO:     127.0.0.1:42114 - "GET /api/news?category=politica&relevance=follow&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42114 - "GET /api/news/featured?limit=20&category=politica HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43802 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43802 - "GET /api/categories HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43804 - "GET /api/news?sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43804 - "GET /api/news?category=geopolitica&sort_by=relevance&page=1&page_size=20 HTTP/1.1" 200 OK

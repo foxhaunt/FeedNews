@@ -54,8 +54,11 @@ def _clean_html(text: Optional[str]) -> Optional[str]:
     if not text:
         return None
     try:
+        from app.ingestion.normalizer import clean_html_editorial_noise, clean_editorial_noise
+        text = clean_html_editorial_noise(text)  # remove editorial blocks before stripping tags
         soup = BeautifulSoup(text, "lxml")
-        return soup.get_text(separator=" ").strip()[:2000]
+        plain = soup.get_text(separator=" ").strip()[:2000]
+        return clean_editorial_noise(plain)       # second pass on plain text (catches inline markers)
     except Exception:
         return text[:2000]
 

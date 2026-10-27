@@ -7,6 +7,66 @@ _SPAM_PATTERNS = [
     re.compile(r"\b(subscribe|newsletter|sign up|click here|buy now)\b", re.I),
 ]
 
+# ─── Editorial recommendation block cleaner ──────────────────────────────────
+# Spanish CMSs inject "Más información: <headline>" or "Otras historias: …" at
+# the end of RSS summary fields.  These patterns match from the first editorial
+# marker to end-of-string and strip the whole block.
+#
+# Rules to avoid false positives:
+#  - All markers are Title-case (capital first letter) – legitimate mid-sentence
+#    uses ("para más información, consulte…") use lowercase and are unaffected.
+#  - A literal colon must follow (possibly with a space before it), which
+#    distinguishes the section-heading use from any prose occurrence.
+#  - `re.DOTALL` ensures multi-line / multi-headline blocks are fully removed.
+
+_EDITORIAL_MARKERS = (
+    r"Más información"
+    r"|Otras historias"
+    r"|Otros artículos"
+    r"|Relacionado"
+    r"|Te puede interesar"
+    r"|También te puede interesar"
+    r"|Lee también"
+    r"|Ver también"
+    r"|No te pierdas"
+    r"|En otros medios"
+    r"|Sigue leyendo"
+    r"|Últimas noticias"
+)
+
+# Match: optional leading whitespace + marker + optional space + colon + everything after
+_EDITORIAL_BLOCK_RE = re.compile(
+    r"\s*(?:" + _EDITORIAL_MARKERS + r")\s*:.*",
+    re.DOTALL,
+)
+
+# HTML-level: remove <p>/<li>/<div> tags whose text content starts with a marker
+_EDITORIAL_HTML_RE = re.compile(
+    r"<(?:p|li|div)[^>]*>\s*(?:" + _EDITORIAL_MARKERS + r")\s*:.*?</(?:p|li|div)>",
+    re.IGNORECASE | re.DOTALL,
+)
+
+
+def clean_editorial_noise(text: Optional[str]) -> Optional[str]:
+    """Remove editorial recommendation blocks from plain text.
+
+    Strips everything from the first occurrence of a known editorial marker
+    (e.g. 'Más información:', 'Otras historias:') to the end of the string.
+    Only Title-case markers are matched, so mid-sentence lowercase uses like
+    'para más información, consulte…' are preserved unchanged.
+    """
+    if not text:
+        return text
+    cleaned = _EDITORIAL_BLOCK_RE.sub("", text).strip()
+    return cleaned or text  # never return empty string if input was non-empty
+
+
+def clean_html_editorial_noise(html: Optional[str]) -> Optional[str]:
+    """Strip editorial recommendation blocks from HTML before text extraction."""
+    if not html:
+        return html
+    return _EDITORIAL_HTML_RE.sub("", html)
+
 
 def is_valid_article(article: RawArticle) -> bool:
     if not article.title or len(article.title.strip()) < 10:
