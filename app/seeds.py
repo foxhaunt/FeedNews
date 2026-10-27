@@ -32,7 +32,7 @@ SOURCES = [
         "name": "El Diario",
         "url": "https://www.eldiario.es/rss/",
         "feed_type": "rss", "geographic_scope": "spain", "language": "es",
-        "reliability_score": 0.8, "fetch_interval_minutes": 30,
+        "reliability_score": 0.55, "fetch_interval_minutes": 30,
         "enabled": False,
         "extra_config": {"editorial": "izquierda"},
     },

@@ -41,7 +41,7 @@ Agregador personal de noticias con relevancia configurable y perfil histórico p
 | OKDIARIO | derecha | 0.55 | ✅ activa |
 | La Bandera | derecha | 0.60 | ✅ activa |
 | La Gaceta | derecha | 0.55 | ✅ activa |
-| El Diario | izquierda | 0.80 | ❌ desactivada |
+| El Diario | izquierda | 0.55 | ❌ desactivada |
 
 ### Europa
 
