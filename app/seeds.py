@@ -5,6 +5,7 @@ from app.database import AsyncSessionLocal, init_db
 from app.models import Source, Category
 
 CATEGORIES = [
+    {"slug": "historia", "name_es": "Historia", "name_en": "History", "icon": "📜", "order": 0},
     {"slug": "politica", "name_es": "Política", "name_en": "Politics", "icon": "🏛️", "order": 1},
     {"slug": "economia", "name_es": "Economía y mercados", "name_en": "Economy & Markets", "icon": "📈", "order": 2},
     {"slug": "geopolitica", "name_es": "Geopolítica", "name_en": "Geopolitics", "icon": "🌍", "order": 3},
@@ -32,6 +33,7 @@ SOURCES = [
         "url": "https://www.eldiario.es/rss/",
         "feed_type": "rss", "geographic_scope": "spain", "language": "es",
         "reliability_score": 0.8, "fetch_interval_minutes": 30,
+        "enabled": False,
         "extra_config": {"editorial": "izquierda"},
     },
     {
@@ -215,6 +217,63 @@ SOURCES = [
         "reliability_score": 0.9, "fetch_interval_minutes": 15,
         "enabled": False,
         "extra_config": {"editorial": "agencia", "note": "feed oficial sin acceso libre verificado"},
+    },
+    # ── Historia ─────────────────────────────────────────────────────────────
+    {
+        "name": "Historia National Geographic",
+        "url": "https://historia.nationalgeographic.com.es/feed",
+        "feed_type": "rss", "geographic_scope": "spain", "language": "es",
+        "reliability_score": 0.9, "fetch_interval_minutes": 120,
+        "enabled": False,
+        "extra_config": {
+            "primary_category": "historia",
+            "note": "feed devuelve 403 Forbidden; bloqueado por CDN Akamai",
+        },
+    },
+    {
+        "name": "El Reto Histórico",
+        "url": "https://elretohistorico.com/feed/",
+        "feed_type": "rss", "geographic_scope": "spain", "language": "es",
+        "reliability_score": 0.75, "fetch_interval_minutes": 120,
+        "extra_config": {"primary_category": "historia", "editorial": "divulgacion"},
+    },
+    {
+        "name": "Muy Interesante Historia",
+        "url": "https://muyinteresante.okdiario.com/historia/feed/",
+        "feed_type": "rss", "geographic_scope": "spain", "language": "es",
+        "reliability_score": 0.8, "fetch_interval_minutes": 120,
+        "extra_config": {"primary_category": "historia", "editorial": "divulgacion"},
+    },
+    # CSIC Hispania Sacra: certificado SSL inválido; ssl_verify=False necesario
+    {
+        "name": "Hispania Sacra (CSIC)",
+        "url": "https://hispaniasacra.revistas.csic.es/index.php/hispaniasacra/gateway/plugin/WebFeedGatewayPlugin/rss2",
+        "feed_type": "rss", "geographic_scope": "spain", "language": "es",
+        "reliability_score": 0.9, "fetch_interval_minutes": 1440,
+        "extra_config": {
+            "primary_category": "historia",
+            "editorial": "academico",
+            "ssl_verify": False,
+        },
+    },
+    # CSIC Hispania: certificado SSL inválido; ssl_verify=False necesario
+    {
+        "name": "Hispania (CSIC)",
+        "url": "https://hispania.revistas.csic.es/index.php/hispania/gateway/plugin/WebFeedGatewayPlugin/rss2",
+        "feed_type": "rss", "geographic_scope": "spain", "language": "es",
+        "reliability_score": 0.9, "fetch_interval_minutes": 1440,
+        "extra_config": {
+            "primary_category": "historia",
+            "editorial": "academico",
+            "ssl_verify": False,
+        },
+    },
+    {
+        "name": "En la España Medieval (UCM)",
+        "url": "https://revistas.ucm.es/index.php/ELEM/gateway/plugin/WebFeedGatewayPlugin/rss2",
+        "feed_type": "rss", "geographic_scope": "spain", "language": "es",
+        "reliability_score": 0.9, "fetch_interval_minutes": 1440,
+        "extra_config": {"primary_category": "historia", "editorial": "academico"},
     },
 ]
 

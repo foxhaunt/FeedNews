@@ -100,7 +100,8 @@ async def list_news(
 @router.get("/featured", response_model=List[NewsOut])
 async def featured_news(
     geo: Optional[str] = Query(None),
-    limit: int = Query(10, ge=1, le=50),
+    category: Optional[str] = Query(None),
+    limit: int = Query(20, ge=1, le=50),
     db: AsyncSession = Depends(get_db),
 ):
     stmt = (
@@ -111,6 +112,8 @@ async def featured_news(
     )
     if geo:
         stmt = stmt.where(News.geographic_scope == geo)
+    if category:
+        stmt = stmt.join(News.categories).where(Category.slug == category)
     stmt = stmt.order_by(desc(News.relevance_score), desc(News.published_at)).limit(limit)
     result = await db.execute(stmt)
     return [NewsOut.model_validate(n) for n in result.scalars().all()]

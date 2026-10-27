@@ -188,3 +188,177 @@ def test_image_error_uses_remove_not_display_none():
     assert "this.remove()" in JS, (
         "Images must use onerror='this.remove()' to keep consistent card height"
     )
+
+
+# ===========================================================================
+# Spec 3.2 — Featured block visibility tests
+# ===========================================================================
+#
+# Tests verify the JS behaviour in index.html:
+#   - Featured section is shown ONLY when state.relevance === 'featured'
+#   - All other filter states hide it
+#   - No duplicates: loadNews() early-returns when relevance === 'featured'
+
+
+# ---------------------------------------------------------------------------
+# 3.2.1  «Todas» (no relevance filter) → hide the featured block
+# ---------------------------------------------------------------------------
+
+def test_3_2_1_todas_hides_featured_section():
+    """When state.relevance is falsy, loadFeatured must hide the section."""
+    # The guard condition must fire for any truthy relevance != 'featured'
+    m = re.search(r"function loadFeatured\(\)(.*?)^}", JS, re.MULTILINE | re.DOTALL)
+    assert m, "loadFeatured() function not found in JS"
+    body = m.group(1)
+    # Must hide when relevance !== 'featured'
+    assert "relevance !== 'featured'" in body or "relevance!=='featured'" in body.replace(" ", ""), (
+        "loadFeatured() must hide the section when relevance !== 'featured'"
+    )
+    # Must set display:none early (before the API call)
+    hide_pos = body.find("display='none'")
+    assert hide_pos != -1, "loadFeatured() must set display='none' on early return"
+
+
+# ---------------------------------------------------------------------------
+# 3.2.2  «Destacadas» → show the featured block
+# ---------------------------------------------------------------------------
+
+def test_3_2_2_destacadas_shows_featured_section():
+    """When state.relevance === 'featured', loadFeatured must show the section."""
+    m = re.search(r"function loadFeatured\(\)(.*?)^}", JS, re.MULTILINE | re.DOTALL)
+    assert m, "loadFeatured() function not found in JS"
+    body = m.group(1)
+    # Must set display to something other than 'none' after fetching
+    assert "display=''" in body or "display = ''" in body or "display='block'" in body or \
+           "removeAttribute('style')" in body or ".hidden = false" in body, (
+        "loadFeatured() must make the section visible when relevance === 'featured'"
+    )
+
+
+# ---------------------------------------------------------------------------
+# 3.2.3  «Relevantes» / «Seguimiento» → hide the featured block
+# ---------------------------------------------------------------------------
+
+def test_3_2_3_relevantes_y_seguimiento_hide_featured():
+    """The visibility guard in loadFeatured() only admits 'featured', nothing else."""
+    m = re.search(r"function loadFeatured\(\)(.*?)^}", JS, re.MULTILINE | re.DOTALL)
+    assert m, "loadFeatured() function not found in JS"
+    body = m.group(1)
+    # Guard must use 'featured' as the only accepted relevance value
+    # The implementation checks !== 'featured' (negation) to early-return
+    assert "!== 'featured'" in body or "!=='featured'" in body.replace(" ", ""), (
+        "loadFeatured() must guard with relevance !== 'featured'"
+    )
+    # Ensure the body does NOT also allow 'relevant' or 'follow' to show the block
+    assert "=== 'relevant'" not in body and "==='relevant'" not in body.replace(" ", ""), (
+        "loadFeatured() must not admit 'relevant' as a show-block condition"
+    )
+
+
+# ---------------------------------------------------------------------------
+# 3.2.4  Category filter → hide the featured block
+# ---------------------------------------------------------------------------
+
+def test_3_2_4_category_filter_hides_featured():
+    """Category changes call loadFeatured(); the guard then hides the block."""
+    # The category-click handler must call loadFeatured()
+    assert "loadFeatured" in JS, "loadFeatured must be called somewhere in JS"
+    m = re.search(r"state\.category\s*=\s*btn\.dataset\.cat.*?loadFeatured\(\)", JS, re.DOTALL)
+    assert m, (
+        "Category-click handler must call loadFeatured() after updating state.category"
+    )
+
+
+# ---------------------------------------------------------------------------
+# 3.2.5  Geographic filter alone → hide featured (unless relevance === 'featured')
+# ---------------------------------------------------------------------------
+
+def test_3_2_5_geo_filter_without_featured_hides_block():
+    """Geo-scope changes call loadFeatured(); guard hides block unless relevance==='featured'."""
+    m = re.search(r"state\.scope\s*=\s*btn\.dataset\.scope.*?loadFeatured\(\)", JS, re.DOTALL)
+    assert m, (
+        "Geo-scope click handler must call loadFeatured() after updating state.scope"
+    )
+
+
+# ---------------------------------------------------------------------------
+# 3.2.6  Changing filter updates visibility correctly
+# ---------------------------------------------------------------------------
+
+def test_3_2_6_relevance_filter_calls_load_featured():
+    """The relevance-click handler calls loadFeatured() so visibility updates."""
+    m = re.search(r"state\.relevance\s*=\s*btn\.dataset\.relevance.*?loadFeatured\(\)", JS, re.DOTALL)
+    assert m, (
+        "Relevance-click handler must call loadFeatured() after updating state.relevance"
+    )
+
+
+# ---------------------------------------------------------------------------
+# 3.2.7  «Destacadas» + category or geo → API call includes both params
+# ---------------------------------------------------------------------------
+
+def test_3_2_7_featured_api_call_includes_category_and_geo():
+    """loadFeatured() must pass category and geo params to the /featured API."""
+    m = re.search(r"function loadFeatured\(\)(.*?)^}", JS, re.MULTILINE | re.DOTALL)
+    assert m, "loadFeatured() function not found in JS"
+    body = m.group(1)
+    assert "state.scope" in body, (
+        "loadFeatured() must forward state.scope to the /featured API"
+    )
+    assert "state.category" in body, (
+        "loadFeatured() must forward state.category to the /featured API"
+    )
+
+
+# ---------------------------------------------------------------------------
+# 3.2.8  No duplicates: loadNews() must early-return when relevance === 'featured'
+# ---------------------------------------------------------------------------
+
+def test_3_2_8_load_news_returns_early_for_featured():
+    """loadNews() must not render its list when state.relevance === 'featured'."""
+    m = re.search(r"async function loadNews\(\)(.*?)^}", JS, re.MULTILINE | re.DOTALL)
+    assert m, "loadNews() function not found in JS"
+    body = m.group(1)
+    assert "=== 'featured'" in body or "==='featured'" in body.replace(" ", ""), (
+        "loadNews() must check for relevance === 'featured'"
+    )
+    # The early return / bail-out must appear BEFORE the API params are built
+    featured_check_pos = body.find("'featured'")
+    return_pos = body.find("return", featured_check_pos)
+    assert return_pos != -1, (
+        "loadNews() must return early when relevance === 'featured'"
+    )
+
+
+# ---------------------------------------------------------------------------
+# 3.2.9  Search and geo still function (no accidental removal of their logic)
+# ---------------------------------------------------------------------------
+
+def test_3_2_9_search_param_still_forwarded_in_load_news():
+    """loadNews() must still forward the search/q parameter."""
+    m = re.search(r"async function loadNews\(\)(.*?)^}", JS, re.MULTILINE | re.DOTALL)
+    assert m, "loadNews() function not found in JS"
+    body = m.group(1)
+    assert "state.search" in body or "q" in body, (
+        "loadNews() must still forward the search/q parameter"
+    )
+    assert "state.scope" in body, (
+        "loadNews() must still forward state.scope (geo filter)"
+    )
+
+
+# ---------------------------------------------------------------------------
+# 3.2.10  Other result sections keep their current behaviour
+# ---------------------------------------------------------------------------
+
+def test_3_2_10_saved_section_still_managed_by_render_saved():
+    """renderSaved() must still exist and be called from the saved-btn handler."""
+    assert "function renderSaved" in JS, "renderSaved() function must still exist"
+    assert "renderSaved()" in JS, "renderSaved() must still be called"
+    # saved-btn handler must NOT call loadNews() while showing saved articles
+    m = re.search(r"saved-btn.*?addEventListener.*?click.*?\)\s*\{(.*?)^\s*\}\)", JS, re.MULTILINE | re.DOTALL)
+    # Fallback: look for the showSaved toggling block
+    m2 = re.search(r"showSaved\s*=\s*!state\.showSaved(.*?)renderSaved\(\)", JS, re.DOTALL)
+    assert m2, (
+        "saved-btn handler must call renderSaved() when entering saved view"
+    )

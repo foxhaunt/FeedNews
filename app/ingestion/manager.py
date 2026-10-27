@@ -25,7 +25,8 @@ async def _log(session: AsyncSession, level: str, component: str, message: str, 
 async def _fetch_source(source: Source) -> tuple:
     """Returns (articles, error_message)."""
     try:
-        articles = await fetch_feed(source.url, source.language)
+        ssl_verify = (source.extra_config or {}).get("ssl_verify", True)
+        articles = await fetch_feed(source.url, source.language, ssl_verify=ssl_verify)
         return articles, None
     except Exception as e:
         return [], str(e)
@@ -84,13 +85,19 @@ async def ingest_source(source_id: int):
                 pass
 
             geo_scope = source.geographic_scope
-            try:
-                from app.ingestion.normalizer import extract_geo_hints
-                hints = extract_geo_hints(raw.title, raw.summary)
-                if hints:
-                    geo_scope = hints[0]
-            except Exception:
-                pass
+            # Historical sources (primary_category="historia") cover content
+            # from any time period; their institutional scope is more reliable
+            # than content-based geo detection (e.g. "Portugal" in a medieval
+            # article should not change scope from "spain" to "europe").
+            _is_historia = (source.extra_config or {}).get("primary_category") == "historia"
+            if not _is_historia:
+                try:
+                    from app.ingestion.normalizer import extract_geo_hints
+                    hints = extract_geo_hints(raw.title, raw.summary)
+                    if hints:
+                        geo_scope = hints[0]
+                except Exception:
+                    pass
 
             news = News(
                 source_id=source.id,
@@ -133,7 +140,11 @@ async def process_pending_news():
 
         for news in news_items:
             try:
-                cat_slugs = await categorize_news(news, session)
+                source_primary = (
+                    (news.source.extra_config or {}).get("primary_category")
+                    if news.source else None
+                )
+                cat_slugs = await categorize_news(news, session, source_primary_category=source_primary)
                 score_news(news, category_slugs=cat_slugs)
                 news.processing_status = "processed"
                 from datetime import datetime, timezone

@@ -489,3 +489,90 @@ def test_virus_in_legal_context_not_ciencia():
     )
     assert "ciencia" not in result
     assert "seguridad" in result
+
+
+# ---------------------------------------------------------------------------
+# Regression: secondary-category threshold when source_primary_category is set
+# (Part 3.1 of the spec — tests 1-8)
+# ---------------------------------------------------------------------------
+
+# For these tests we simulate categorize_news() via its internal logic without
+# a real DB, using the public _passes_secondary_threshold helper.
+from app.processing.categorizer import _passes_secondary_threshold
+
+
+def _apply_source_override(title: str, summary: str, primary: str) -> list:
+    """Simulate categorize_news() secondary filtering for unit tests."""
+    slugs = classify_text(title, summary)
+    text = (title + " " + summary).lower().strip()
+    slugs = [primary] + [
+        s for s in slugs
+        if s != primary and _passes_secondary_threshold(s, text)
+    ]
+    return slugs[:3]
+
+
+def test_3_1_single_guerra_in_historia_source_no_defensa():
+    """Spec 3.1.1 — single 'guerra' in a historia source must not activate Defensa."""
+    slugs = _apply_source_override(
+        "Guerra y paz entre Portugal y Castilla: las vistas del final de la Edad Media",
+        "Entre 1369 y 1480, los reinos de Portugal y Castilla se enfrentaron cinco veces.",
+        "historia",
+    )
+    assert slugs[0] == "historia"
+    assert "defensa" not in slugs
+
+
+def test_3_1_single_diplomacia_in_historia_source_no_geopolitica():
+    """Spec 3.1.2 — single 'diplomacia' in a historia source must not activate Geopolítica."""
+    slugs = _apply_source_override(
+        "La diplomacia de la Corona de Aragón durante la guerra medieval",
+        "Estudio sobre las relaciones entre los reinos peninsulares en el siglo XIV.",
+        "historia",
+    )
+    assert slugs[0] == "historia"
+    assert "geopolitica" not in slugs
+
+
+def test_3_1_wwii_article_historia_keeps_defensa():
+    """Spec 3.1.3 — historia article with strong military evidence keeps Defensa."""
+    slugs = _apply_source_override(
+        "La Segunda Guerra Mundial: tropas, bombardeos y operaciones militares",
+        "El ejército aliado lanzó una ofensiva militar con miles de soldados y tanques.",
+        "historia",
+    )
+    assert slugs[0] == "historia"
+    # Multiple defensa keywords → score well above 2× threshold
+    assert "defensa" in slugs
+
+
+def test_3_1_current_news_guerra_still_fires_defensa():
+    """Spec 3.1.4 — generic source without primary_category: 'guerra' still fires Defensa."""
+    # No override → classify_text runs at normal threshold
+    result = classify_text(
+        "Guerra en Oriente Medio: Israel intensifica los bombardeos",
+        "Las tropas israelíes avanzaron hacia el norte con apoyo de artillería.",
+    )
+    assert "defensa" in result
+
+
+def test_3_1_historia_primary_is_first():
+    """Spec 3.1.7 — primary category is always first after the override."""
+    slugs = _apply_source_override(
+        "Descubrimientos arqueológicos en la España medieval",
+        "Los yacimientos revelan técnicas de la Edad Media.",
+        "historia",
+    )
+    assert slugs[0] == "historia"
+
+
+def test_3_1_no_spurious_secondary_from_single_keyword():
+    """Spec 3.1.8 — no spurious secondary from an isolated coincidental keyword."""
+    # 'ejército' alone (score=2) must not fire Defensa (requires score >= 2×threshold = 4)
+    slugs = _apply_source_override(
+        "Las legiones romanas y su organización táctica en la Antigüedad",
+        "El ejército romano era una institución muy compleja y bien estructurada.",
+        "historia",
+    )
+    assert slugs[0] == "historia"
+    assert "defensa" not in slugs

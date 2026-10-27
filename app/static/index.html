@@ -332,14 +332,16 @@ async function loadCategories() {
 }
 
 // ---- Load featured ----
+// The featured section is shown ONLY when the relevance filter is 'featured'.
 async function loadFeatured() {
-  if (state.showSaved || state.search || state.relevance || state.category) {
+  if (state.showSaved || state.relevance !== 'featured') {
     document.getElementById('featured-section').style.display='none';
     return;
   }
   try {
-    const params = new URLSearchParams({limit:6});
+    const params = new URLSearchParams({limit:20});
     if (state.scope) params.set('geo', state.scope);
+    if (state.category) params.set('category', state.category);
     const items = await apiFetch(`/api/news/featured?${params}`);
     const sec = document.getElementById('featured-section');
     if (!items.length) { sec.style.display='none'; return; }
@@ -357,6 +359,21 @@ async function loadNews() {
 
   if (state.showSaved) {
     renderSaved();
+    return;
+  }
+
+  // When 'Destacadas' is active the featured section is the main view;
+  // suppress the news list to avoid duplicating the same articles.
+  if (state.relevance === 'featured') {
+    listEl.innerHTML = '';
+    let titleParts = [];
+    if (state.scope) titleParts.push(geoLabel(state.scope));
+    if (state.category) {
+      const catEl = document.querySelector(`[data-cat="${state.category}"] span`);
+      titleParts.push(catEl ? catEl.textContent.trim() : state.category);
+    }
+    document.getElementById('feed-title').textContent = titleParts.length ? titleParts.join(' · ') : '';
+    document.getElementById('feed-meta').textContent = '';
     return;
   }
 
@@ -590,8 +607,10 @@ document.getElementById('refresh-btn').addEventListener('click', ()=>{
 
 document.getElementById('saved-btn').addEventListener('click', ()=>{
   state.showSaved = !state.showSaved;
-  document.getElementById('featured-section').style.display = state.showSaved?'none':'';
-  if (!state.showSaved) { loadFeatured(); loadNews(); } else { renderSaved(); }
+  if (!state.showSaved) { loadFeatured(); loadNews(); } else {
+    document.getElementById('featured-section').style.display = 'none';
+    renderSaved();
+  }
   document.getElementById('saved-btn').style.color = state.showSaved ? '#f59e0b' : '';
 });
 

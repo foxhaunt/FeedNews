@@ -23,7 +23,7 @@ Assignment rules:
 """
 import re
 import logging
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 from sqlalchemy import select, insert, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models import News, Category, news_categories
@@ -40,6 +40,42 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 _CATEGORIES: List[Tuple] = [
+
+    # ── Historia ────────────────────────────────────────────────────────────
+    # History, archaeology, heritage. Threshold=2 so "historia" in a headline
+    # about something else (e.g. "hará historia este partido") does not fire.
+    ("historia",
+     [
+         ("historia medieval", 2), ("historia moderna", 2),
+         ("historia contemporánea", 2), ("historia antigua", 2),
+         ("edad media", 2), ("edad moderna", 2), ("reconquista", 2),
+         ("arqueología", 2), ("patrimonio histórico", 2),
+         ("patrimonio cultural", 2), ("yacimiento", 2), ("excavación", 2),
+         ("civilización", 2), ("imperio romano", 2), ("antigüedad", 2),
+         ("prehistoria", 2), ("neolítico", 2), ("bronce", 1),
+         ("renacimiento", 2), ("ilustración histórica", 2),
+         ("revolución francesa", 2), ("primera guerra mundial", 2),
+         ("segunda guerra mundial", 2), ("franquismo", 2),
+         ("transición española", 2), ("siglo xix", 2), ("siglo xx", 2),
+         ("siglo xvi", 2), ("siglo xvii", 2), ("siglo xviii", 2),
+         ("monarquía española", 2), ("corona española", 2),
+         ("inquisición", 2), ("conquista americana", 2),
+         ("historiador", 2), ("fuentes históricas", 2),
+     ],
+     [
+         ("medieval history", 2), ("ancient history", 2),
+         ("middle ages", 2), ("renaissance", 2), ("archaeology", 2),
+         ("historical heritage", 2), ("cultural heritage", 2),
+         ("excavation site", 2), ("civilization", 2),
+         ("roman empire", 2), ("antiquity", 2), ("prehistory", 2),
+         ("french revolution", 2), ("world war i", 2), ("world war ii", 2),
+         ("cold war history", 2), ("historical research", 2),
+         ("historian", 2), ("historical sources", 2),
+         ("16th century", 2), ("17th century", 2), ("18th century", 2),
+         ("19th century", 2), ("20th century history", 2),
+         ("spanish inquisition", 2), ("age of discovery", 2),
+     ],
+     2),
 
     # ── Política ────────────────────────────────────────────────────────────
     # Elections, parties, legislatures, government decisions.
@@ -364,9 +400,43 @@ def classify_text(title: str, summary: str) -> List[str]:
     return [slug for slug, _ in scored[:3]]
 
 
-async def categorize_news(news: News, session: AsyncSession) -> List[str]:
-    """Assign categories to a news item and persist them."""
+def _passes_secondary_threshold(slug: str, text: str) -> bool:
+    """True if ``slug``'s score on ``text`` reaches twice its normal threshold.
+
+    Used to filter secondary categories when a source has a forced primary
+    category: prevents a single general keyword (e.g. "guerra", "diplomacia")
+    from firing a category by coincidence when the article is about a
+    historical *topic* rather than a current event.
+    """
+    entry = next((e for e in _CATEGORIES if e[0] == slug), None)
+    if entry is None:
+        return False
+    _, kw_es, kw_en, threshold = entry
+    return score_category(text, kw_es, kw_en) >= threshold * 2
+
+
+async def categorize_news(
+    news: News,
+    session: AsyncSession,
+    source_primary_category: Optional[str] = None,
+) -> List[str]:
+    """Assign categories to a news item and persist them.
+
+    source_primary_category: if set (e.g. 'historia'), it is forced as the
+    primary slug regardless of keyword scores.  Secondary categories are kept
+    only when their score is ≥ 2 × their threshold, preventing single generic
+    keywords from causing false positives in historical sources.
+    """
     slugs = classify_text(news.title_original, news.summary_original)
+
+    if source_primary_category:
+        text = ((news.title_original or "") + " " + (news.summary_original or "")).lower().strip()
+        slugs = [source_primary_category] + [
+            s for s in slugs
+            if s != source_primary_category
+            and _passes_secondary_threshold(s, text)
+        ]
+        slugs = slugs[:3]
 
     result = await session.execute(
         select(Category).where(Category.slug.in_(slugs))

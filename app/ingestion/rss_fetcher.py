@@ -75,17 +75,24 @@ class RawArticle:
             setattr(self, k, v)
 
 
-async def fetch_feed(feed_url: str, source_language: str = "es") -> List[RawArticle]:
+async def fetch_feed(
+    feed_url: str,
+    source_language: str = "es",
+    ssl_verify: bool = True,
+) -> List[RawArticle]:
     """Fetch and parse an RSS/Atom feed, returning raw article objects."""
     timeout = aiohttp.ClientTimeout(total=settings.REQUEST_TIMEOUT_SECONDS)
     headers = {
         "User-Agent": "FeedNews/1.0 (+https://github.com/feedNews) RSS Reader",
         "Accept": "application/rss+xml, application/xml, text/xml, */*",
     }
+    ssl_context = False if not ssl_verify else None  # False = skip verification
 
     try:
         async with aiohttp.ClientSession(timeout=timeout, headers=headers) as session:
-            async with session.get(feed_url, allow_redirects=True, max_redirects=5) as resp:
+            async with session.get(
+                feed_url, allow_redirects=True, max_redirects=5, ssl=ssl_context
+            ) as resp:
                 resp.raise_for_status()
                 content = await resp.read()
     except asyncio.TimeoutError:
